@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+@layer theme {
+  :root {
+    /* Premium Color Palette - Light Bluish Minimalist */
+    --color-background: 255 255 255;
+    --color-foreground: 15 23 42;
+    --color-muted: 248 250 252;
+    --color-muted-foreground: 100 116 139;
+    --color-popover: 255 255 255;
+    --color-popover-foreground: 15 23 42;
+    --color-card: 255 255 255;
+    --color-card-foreground: 15 23 42;
+    --color-border: 226 232 240;
+    --color-input: 226 232 240;
+    --color-primary: 37 99 235;
+    --color-primary-foreground: 248 250 252;
+    --color-secondary: 241 245 249;
+    --color-secondary-foreground: 51 65 85;
+    --color-accent: 241 245 249;
+    --color-accent-foreground: 51 65 85;
+    --color-destructive: 239 68 68;
+    --color-destructive-foreground: 248 250 252;
+    --color-ring: 37 99 235;
+    --radius: 8px;
+  }
+
+  .dark {
+    --color-background: 2 6 23;
+    --color-foreground: 248 250 252;
+    --color-muted: 15 23 42;
+    --color-muted-foreground: 148 163 184;
+    --color-popover: 15 23 42;
+    --color-popover-foreground: 248 250 252;
+    --color-card: 15 23 42;
+    --color-card-foreground: 248 250 252;
+    --color-border: 30 41 59;
+    --color-input: 30 41 59;
+    --color-primary: 59 130 246;
+    --color-primary-foreground: 15 23 42;
+    --color-secondary: 30 41 59;
+    --color-secondary-foreground: 226 232 240;
+    --color-accent: 30 41 59;
+    --color-accent-foreground: 226 232 240;
+    --color-destructive: 220 38 38;
+    --color-destructive-foreground: 248 250 252;
+    --color-ring: 59 130 246;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--color-border));
+  }
+  
+  body {
+    background-color: hsl(var(--color-background));
+    color: hsl(var(--color-foreground));
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Typography Classes */
+.geist-thin { font-family: "Geist", sans-serif; font-weight: 100; font-style: normal; }
+.geist-extralight { font-family: "Geist", sans-serif; font-weight: 200; font-style: normal; }
+.geist-light { font-family: "Geist", sans-serif; font-weight: 300; font-style: normal; }
+.geist-regular { font-family: "Geist", sans-serif; font-weight: 400; font-style: normal; }
+.geist-medium { font-family: "Geist", sans-serif; font-weight: 500; font-style: normal; }
+.geist-semibold { font-family: "Geist", sans-serif; font-weight: 600; font-style: normal; }
+.geist-bold { font-family: "Geist", sans-serif; font-weight: 700; font-style: normal; }
+
+.inter-thin { font-family: "Inter", sans-serif; font-weight: 100; font-style: normal; }
+.inter-extralight { font-family: "Inter", sans-serif; font-weight: 200; font-style: normal; }
+.inter-light { font-family: "Inter", sans-serif; font-weight: 300; font-style: normal; }
+.inter-regular { font-family: "Inter", sans-serif; font-weight: 400; font-style: normal; }
+.inter-medium { font-family: "Inter", sans-serif; font-weight: 500; font-style: normal; }
+.inter-semibold { font-family: "Inter", sans-serif; font-weight: 600; font-style: normal; }
+.inter-bold { font-family: "Inter", sans-serif; font-weight: 700; font-style: normal; }
+
+/* Custom animations */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-from-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.animate-fade-in { animation: fade-in 0.5s ease-out; }
+.animate-slide-in-right { animation: slide-in-from-right 0.3s ease-out; }
+.animate-pulse-subtle { animation: pulse-subtle 2s infinite; }
+
+/* Glass morphism effect */
+.glass {
+  backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+.glass-dark {
+  backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+/* Smooth hover transitions */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Typography hierarchy for better readability */
+.text-display {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 700;
+  font-family: "Geist", sans-serif;
+}
+
+.text-headline {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 600;
+  font-family: "Geist", sans-serif;
+}
+
+.text-title {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 500;
+  font-family: "Geist", sans-serif;
+}
+
+.text-body {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 400;
+  font-family: "Inter", sans-serif;
+}
+
+.text-caption {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 400;
+  color: hsl(var(--color-muted-foreground));
+  font-family: "Inter", sans-serif;
+}
+
+.text-micro {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 400;
+  color: hsl(var(--color-muted-foreground));
+  font-family: "Inter", sans-serif;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--color-border));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--color-muted-foreground));
+}
