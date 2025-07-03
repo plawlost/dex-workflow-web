@@ -1,81 +1,46 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { cn } from "~/lib/utils";
-import { CalendarIcon, PhoneIcon, MailIcon, MessageIcon } from "~/components/icons";
 import { ContactModal } from "./contact-modal";
 import { mockEvents, type Event } from "~/lib/mock-data";
+import { 
+  CalendarIcon,
+  PhoneIcon,
+  MailIcon,
+  MessageIcon,
+  UserIcon
+} from "~/components/icons";
 
 type EventType = "call" | "email" | "slack" | "imessage";
 
-const channelColors: Record<EventType, string> = {
-  call: "bg-emerald-500",
-  email: "bg-blue-500", 
-  slack: "bg-violet-500",
-  imessage: "bg-gray-500",
-};
-
-const channelAccents: Record<EventType, string> = {
-  call: "bg-emerald-500/10 text-emerald-700 border-emerald-200",
-  email: "bg-blue-500/10 text-blue-700 border-blue-200", 
-  slack: "bg-violet-500/10 text-violet-700 border-violet-200",
-  imessage: "bg-gray-500/10 text-gray-700 border-gray-200",
-};
-
-const channelIcons: Record<EventType, React.ComponentType<{ className?: string; size?: number }>> = {
+const channelIcons = {
   call: PhoneIcon,
   email: MailIcon,
   slack: MessageIcon,
   imessage: MessageIcon,
-};
+} as const;
+
+const channelColors = {
+  call: "border-l-emerald-500",
+  email: "border-l-blue-500", 
+  slack: "border-l-purple-500",
+  imessage: "border-l-cyan-500",
+} as const;
+
+const channelAccents = {
+  call: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400",
+  email: "bg-blue-500/10 border-blue-500/20 text-blue-400",
+  slack: "bg-purple-500/10 border-purple-500/20 text-purple-400", 
+  imessage: "bg-cyan-500/10 border-cyan-500/20 text-cyan-400",
+} as const;
 
 export function TimelineView() {
   const [selectedFilters, setSelectedFilters] = useState<(EventType | "all")[]>(["all"]);
   const [selectedDate, setSelectedDate] = useState("today");
-  const [selectedContact, setSelectedContact] = useState<Event["contact"] | null>(null);
+  const [selectedContact, setSelectedContact] = useState<string | null>(null);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [focusedCardIndex, setFocusedCardIndex] = useState<number>(-1);
-
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeydown = (e: KeyboardEvent) => {
-      // Global shortcuts
-      if (e.metaKey || e.ctrlKey) {
-        switch (e.key) {
-          case "k":
-            e.preventDefault();
-            document.getElementById("global-search")?.focus();
-            break;
-          case "/":
-            e.preventDefault();
-            console.log("Shortcuts cheat sheet");
-            break;
-        }
-      }
-
-      // Card navigation
-      const filteredEvents = selectedFilters.includes("all") 
-        ? mockEvents 
-        : mockEvents.filter(event => selectedFilters.includes(event.type));
-
-      if (e.key === "ArrowDown" && focusedCardIndex < filteredEvents.length - 1) {
-        e.preventDefault();
-        setFocusedCardIndex(prev => prev + 1);
-      } else if (e.key === "ArrowUp" && focusedCardIndex > 0) {
-        e.preventDefault();
-        setFocusedCardIndex(prev => prev - 1);
-      } else if (e.key === "Enter" && focusedCardIndex >= 0) {
-        e.preventDefault();
-        handleCardClick(filteredEvents[focusedCardIndex]!);
-      } else if (e.key === "e" && focusedCardIndex >= 0) {
-        e.preventDefault();
-        console.log("Export card", focusedCardIndex);
-      }
-    };
-
-    document.addEventListener("keydown", handleKeydown);
-    return () => document.removeEventListener("keydown", handleKeydown);
-  }, [focusedCardIndex, selectedFilters]);
 
   const toggleFilter = (filter: EventType | "all") => {
     if (filter === "all") {
@@ -86,12 +51,13 @@ export function TimelineView() {
         : selectedFilters.includes(filter)
           ? selectedFilters.filter(f => f !== filter)
           : [...selectedFilters.filter(f => f !== "all"), filter];
+      
       setSelectedFilters(newFilters.length === 0 ? ["all"] : newFilters);
     }
   };
 
   const handleCardClick = (event: Event) => {
-    setSelectedContact(event.contact);
+    setSelectedContact(event.contactName);
     setIsContactModalOpen(true);
   };
 
@@ -106,41 +72,55 @@ export function TimelineView() {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="space-y-2">
-        <h1 className="text-display">Timeline</h1>
-        <p className="text-caption">
-          Your recent conversations and interactions, intelligently organized.
-        </p>
+      {/* Header - Refined */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-display text-foreground mb-2">Timeline</h1>
+          <p className="text-caption max-w-2xl">
+            Autonomous monitoring of your conversations and interactions, intelligently organized by AI.
+          </p>
+        </div>
+        
+        {/* System Status */}
+        <div className="hidden md:flex items-center gap-4">
+          <div className="status-indicator active">
+            <span className="text-caption">System Active</span>
+          </div>
+          <div className="text-right">
+            <div className="text-title font-semibold text-foreground">{filteredEvents.length}</div>
+            <div className="text-micro text-muted-foreground">Total Events</div>
+          </div>
+        </div>
       </div>
       
-      {/* Filter Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Filter & Control Bar */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        {/* Event Type Filters */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2">
           {[
-            { key: "all", label: "All", count: mockEvents.length },
+            { key: "all", label: "All Events", count: mockEvents.length },
             { key: "call", label: "Calls", count: mockEvents.filter(e => e.type === "call").length },
             { key: "email", label: "Email", count: mockEvents.filter(e => e.type === "email").length },
             { key: "slack", label: "Slack", count: mockEvents.filter(e => e.type === "slack").length }, 
-            { key: "imessage", label: "iMessage", count: mockEvents.filter(e => e.type === "imessage").length },
+            { key: "imessage", label: "Messages", count: mockEvents.filter(e => e.type === "imessage").length },
           ].map(({ key, label, count }) => (
             <button
               key={key}
               onClick={() => toggleFilter(key as EventType | "all")}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap",
-                "hover:scale-105 hover-lift",
+                "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap",
+                "border border-border",
                 selectedFilters.includes(key as EventType | "all")
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                  : "bg-card text-muted-foreground hover:bg-accent hover:text-foreground hover:border-accent"
               )}
             >
-              {label}
+              <span>{label}</span>
               <span className={cn(
-                "px-1.5 py-0.5 rounded-full text-xs",
+                "px-2 py-0.5 rounded-lg text-xs font-semibold",
                 selectedFilters.includes(key as EventType | "all")
                   ? "bg-primary-foreground/20 text-primary-foreground"
-                  : "bg-foreground/10 text-muted-foreground"
+                  : "bg-muted text-muted-foreground"
               )}>
                 {count}
               </span>
@@ -148,27 +128,27 @@ export function TimelineView() {
           ))}
         </div>
 
-        {/* Date Picker */}
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <CalendarIcon size={16} className="text-muted-foreground" />
+        {/* Date & Time Controls */}
+        <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <CalendarIcon size={16} />
+            <span className="text-caption">Period:</span>
+          </div>
           <select 
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className={cn(
-              "px-3 py-2 bg-background border border-border rounded-lg text-sm",
-              "focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50",
-              "transition-all duration-200"
-            )}
+            className="flat-input text-sm min-w-32"
           >
             <option value="today">Today</option>
             <option value="yesterday">Yesterday</option>
             <option value="this-week">This Week</option>
             <option value="last-week">Last Week</option>
+            <option value="this-month">This Month</option>
           </select>
         </div>
       </div>
 
-      {/* Event Cards Grid */}
+      {/* Event Timeline */}
       <div className="space-y-4">
         {filteredEvents.map((event, index) => {
           const Icon = channelIcons[event.type];
@@ -178,134 +158,143 @@ export function TimelineView() {
             <div 
               key={event.id}
               className={cn(
-                "group relative p-6 rounded-xl border bg-card hover:shadow-md transition-all duration-200 cursor-pointer",
-                "hover:border-border/60 hover-lift",
-                isFocused && "ring-2 ring-primary/20 ring-offset-2 ring-offset-background"
+                "group flat-card p-6 cursor-pointer",
+                "hover:shadow-lg transition-all duration-200",
+                isFocused && "ring-2 ring-primary/30 ring-offset-2 ring-offset-background",
+                channelColors[event.type]
               )}
               onClick={() => handleCardClick(event)}
               tabIndex={0}
               onFocus={() => setFocusedCardIndex(index)}
             >
-              {/* Channel indicator */}
-              <div className={cn(
-                "absolute left-0 top-6 bottom-6 w-1 rounded-r-full",
-                channelColors[event.type]
-              )} />
-              
-              {/* Header */}
+              {/* Event Header */}
               <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   <div className={cn(
-                    "p-2 rounded-lg border",
+                    "p-3 rounded-xl border",
                     channelAccents[event.type]
                   )}>
-                    <Icon size={16} />
+                    <Icon size={18} />
                   </div>
                   <div>
-                    <h3 className="text-title font-medium">{event.contactName}</h3>
-                    <p className="text-caption">{event.time}</p>
+                    <div className="flex items-center gap-3 mb-1">
+                      <h3 className="text-title text-foreground font-semibold">{event.contactName}</h3>
+                      <span className="text-micro text-muted-foreground">{event.type.toUpperCase()}</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-caption text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <circle cx="12" cy="12" r="10"/>
+                          <polyline points="12,6 12,12 16,14"/>
+                        </svg>
+                        <span>{event.time}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <UserIcon size={14} />
+                        <span>Direct</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 
-                {/* Export status */}
-                {event.isExported && (
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse-subtle" />
-                    <span className="text-micro font-medium text-emerald-600">Exported</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Summary */}
-              <div className="mb-4 space-y-2">
-                {event.summary.map((point, pointIndex) => (
-                  <div key={pointIndex} className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 bg-muted-foreground/40 rounded-full mt-2 flex-shrink-0" />
-                    <p className="text-body text-muted-foreground leading-relaxed">{point}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Footer */}
-              <div className="flex items-center justify-between pt-4 border-t border-border/50">
-                <div className="flex gap-2 flex-wrap">
-                  {event.tags.map((tag) => (
-                    <span 
-                      key={tag}
-                      className="px-2 py-1 bg-muted/50 text-muted-foreground text-micro font-medium rounded-md"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                {/* Status & Actions */}
+                <div className="flex items-center gap-3">
+                  {event.isExported && (
+                    <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse-subtle" />
+                      <span className="text-micro text-emerald-400 font-medium">Exported</span>
+                    </div>
+                  )}
+                  
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-muted-foreground group-hover:text-foreground transition-colors">
+                    <polyline points="9,18 15,12 9,6"/>
+                  </svg>
                 </div>
+              </div>
 
-                {/* Action buttons */}
-                <div className={cn(
-                  "flex items-center gap-1 transition-opacity duration-200",
-                  isFocused ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-                )}>
-                  <button 
-                    className="p-2 rounded-md hover:bg-accent transition-colors duration-150" 
-                    title="Add notes"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                    </svg>
-                  </button>
-                  <button 
-                    className="p-2 rounded-md hover:bg-accent transition-colors duration-150" 
-                    title="Export (E)"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M7 7h10v10" />
-                      <path d="M7 17 17 7" />
-                    </svg>
-                  </button>
-                  <button 
-                    className="p-2 rounded-md hover:bg-accent transition-colors duration-150" 
-                    title="More options"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <circle cx="12" cy="12" r="1" />
-                      <circle cx="19" cy="12" r="1" />
-                      <circle cx="5" cy="12" r="1" />
-                    </svg>
-                  </button>
+              {/* Event Summary */}
+              <div className="space-y-3">
+                <div className="space-y-2">
+                  {Array.isArray(event.summary) ? (
+                    event.summary.map((point, pointIndex) => (
+                      <div key={pointIndex} className="flex items-start gap-3">
+                        <div className="w-1.5 h-1.5 bg-muted-foreground/40 rounded-full mt-2 flex-shrink-0" />
+                        <p className="text-body text-foreground leading-relaxed">{point}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-body text-foreground leading-relaxed">
+                      {event.summary}
+                    </p>
+                  )}
+                </div>
+                
+                {/* Event Metadata */}
+                <div className="flex items-center justify-between pt-3 border-t border-border">
+                  <div className="flex gap-2 flex-wrap">
+                    {event.tags.map((tag) => (
+                      <span 
+                        key={tag}
+                        className="px-2 py-1 bg-muted/50 text-muted-foreground text-micro font-medium rounded-md"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  {/* Quick Actions */}
+                  <div className={cn(
+                    "flex items-center gap-1 transition-opacity duration-200",
+                    "opacity-0 group-hover:opacity-100"
+                  )}>
+                    <button 
+                      className="p-2 rounded-lg hover:bg-accent transition-colors duration-150" 
+                      title="Add to task"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                        <path d="M12 5v14m-7-7h14" />
+                      </svg>
+                    </button>
+                    <button 
+                      className="p-2 rounded-lg hover:bg-accent transition-colors duration-150" 
+                      title="Export"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                        <path d="M7 7h10v10" />
+                        <path d="M7 17 17 7" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           );
         })}
+        
+        {/* Empty State */}
+        {filteredEvents.length === 0 && (
+          <div className="flat-card p-12 text-center">
+            <div className="w-16 h-16 bg-muted rounded-xl flex items-center justify-center mx-auto mb-4">
+              <CalendarIcon size={24} className="text-muted-foreground" />
+            </div>
+            <h3 className="text-title text-foreground mb-2">No events found</h3>
+            <p className="text-caption text-muted-foreground">
+              No events match your current filters. Try adjusting your selection or date range.
+            </p>
+          </div>
+        )}
       </div>
 
-      {/* Empty state */}
-      {filteredEvents.length === 0 && (
-        <div className="text-center py-16">
-          <div className="w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CalendarIcon size={24} className="text-muted-foreground" />
-          </div>
-          <h3 className="text-title font-medium mb-2">No events found</h3>
-          <p className="text-caption">
-            Try adjusting your filters or check back later for new conversations.
-          </p>
-        </div>
-      )}
-
-      {/* Contact Modal */}
-      {selectedContact && (
+      {/* Contact Detail Modal */}
+      {isContactModalOpen && selectedContact && (
         <ContactModal
-          contact={selectedContact}
-          isOpen={isContactModalOpen}
+          contactName={selectedContact}
           onClose={handleContactModalClose}
         />
       )}

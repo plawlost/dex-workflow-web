@@ -9,6 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Custom color palette - Jony Ive inspired
+        lavender_web: "#E0E6FF",
+        dodger_blue: "#1E90FF", 
+        ghost_white: "#F8F8FF",
+        eerie_black: "#1A1A1A",
+        black: "#000000",
+        
+        // Semantic color system for dark mode
         border: "hsl(var(--color-border))",
         input: "hsl(var(--color-input))",
         ring: "hsl(var(--color-ring))",
@@ -44,23 +52,57 @@ const config: Config = {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "12px",
+        md: "8px", 
+        sm: "4px",
+        xs: "2px",
       },
       fontFamily: {
-        geist: ["Geist", "sans-serif"],
-        inter: ["Inter", "sans-serif"],
+        sans: ["Inter", "system-ui", "sans-serif"],
+        inter: ["Inter", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
+      },
+      fontSize: {
+        'xs': ['0.75rem', { lineHeight: '1rem', letterSpacing: '0.025em' }],
+        'sm': ['0.875rem', { lineHeight: '1.25rem', letterSpacing: '0.0125em' }],
+        'base': ['1rem', { lineHeight: '1.5rem', letterSpacing: '0' }],
+        'lg': ['1.125rem', { lineHeight: '1.75rem', letterSpacing: '-0.0125em' }],
+        'xl': ['1.25rem', { lineHeight: '1.75rem', letterSpacing: '-0.025em' }],
+        '2xl': ['1.5rem', { lineHeight: '2rem', letterSpacing: '-0.025em' }],
+        '3xl': ['1.875rem', { lineHeight: '2.25rem', letterSpacing: '-0.05em' }],
+        '4xl': ['2.25rem', { lineHeight: '2.5rem', letterSpacing: '-0.05em' }],
       },
       animation: {
-        "fade-in": "fade-in 0.5s ease-out",
-        "slide-in-right": "slide-in-from-right 0.3s ease-out",
-        "pulse-subtle": "pulse-subtle 2s infinite",
+        "fade-in": "fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+        "slide-up": "slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+        "scale-in": "scale-in 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+        "pulse-subtle": "pulse-subtle 3s ease-in-out infinite",
       },
-      boxShadow: {
-        "soft": "0 2px 8px 0 rgba(0, 0, 0, 0.04)",
-        "medium": "0 4px 12px 0 rgba(0, 0, 0, 0.08)",
-        "hard": "0 8px 24px 0 rgba(0, 0, 0, 0.12)",
+      keyframes: {
+        "fade-in": {
+          "0%": { opacity: "0", transform: "translateY(8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "slide-up": {
+          "0%": { opacity: "0", transform: "translateY(16px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "scale-in": {
+          "0%": { opacity: "0", transform: "scale(0.95)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        "pulse-subtle": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.6" },
+        },
+      },
+      spacing: {
+        '18': '4.5rem',
+        '88': '22rem',
+      },
+      backdropBlur: {
+        xs: '2px',
+        '3xl': '64px',
       },
     },
   },
