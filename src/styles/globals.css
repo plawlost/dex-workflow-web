@@ -1,174 +1,243 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 @layer theme {
   :root {
-    /* Premium Color Palette - Light Bluish Minimalist */
-    --color-background: 255 255 255;
-    --color-foreground: 15 23 42;
-    --color-muted: 248 250 252;
-    --color-muted-foreground: 100 116 139;
-    --color-popover: 255 255 255;
-    --color-popover-foreground: 15 23 42;
-    --color-card: 255 255 255;
-    --color-card-foreground: 15 23 42;
-    --color-border: 226 232 240;
-    --color-input: 226 232 240;
-    --color-primary: 37 99 235;
-    --color-primary-foreground: 248 250 252;
-    --color-secondary: 241 245 249;
-    --color-secondary-foreground: 51 65 85;
-    --color-accent: 241 245 249;
-    --color-accent-foreground: 51 65 85;
+    /* Jony Ive Inspired Dark Mode Color System */
+    /* Primary hierarchy: dodger_blue, lavender_web, eerie_black for high contrast */
+    --color-background: 26 26 26; /* eerie_black */
+    --color-foreground: 248 248 255; /* ghost_white */
+    --color-muted: 0 0 0; /* black for deeper contrast */
+    --color-muted-foreground: 156 163 175; /* sophisticated gray */
+    --color-popover: 26 26 26;
+    --color-popover-foreground: 248 248 255;
+    --color-card: 0 0 0; /* pure black cards for depth */
+    --color-card-foreground: 248 248 255;
+    --color-border: 55 65 81; /* subtle but visible */
+    --color-input: 0 0 0;
+    --color-primary: 30 144 255; /* dodger_blue */
+    --color-primary-foreground: 26 26 26;
+    --color-secondary: 224 230 255; /* lavender_web */
+    --color-secondary-foreground: 26 26 26;
+    --color-accent: 55 65 81;
+    --color-accent-foreground: 224 230 255;
     --color-destructive: 239 68 68;
-    --color-destructive-foreground: 248 250 252;
-    --color-ring: 37 99 235;
-    --radius: 8px;
-  }
-
-  .dark {
-    --color-background: 2 6 23;
-    --color-foreground: 248 250 252;
-    --color-muted: 15 23 42;
-    --color-muted-foreground: 148 163 184;
-    --color-popover: 15 23 42;
-    --color-popover-foreground: 248 250 252;
-    --color-card: 15 23 42;
-    --color-card-foreground: 248 250 252;
-    --color-border: 30 41 59;
-    --color-input: 30 41 59;
-    --color-primary: 59 130 246;
-    --color-primary-foreground: 15 23 42;
-    --color-secondary: 30 41 59;
-    --color-secondary-foreground: 226 232 240;
-    --color-accent: 30 41 59;
-    --color-accent-foreground: 226 232 240;
-    --color-destructive: 220 38 38;
-    --color-destructive-foreground: 248 250 252;
-    --color-ring: 59 130 246;
+    --color-destructive-foreground: 248 248 255;
+    --color-ring: 30 144 255;
+    --radius: 12px;
   }
 }
 
 @layer base {
   * {
     border-color: hsl(var(--color-border));
+    box-sizing: border-box;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
   
   body {
     background-color: hsl(var(--color-background));
     color: hsl(var(--color-foreground));
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: "Inter", system-ui, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-variation-settings: normal;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Inter", system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+  
+  button, input, select, textarea {
+    font-family: inherit;
   }
 }
 
-/* Typography Classes */
-.geist-thin { font-family: "Geist", sans-serif; font-weight: 100; font-style: normal; }
-.geist-extralight { font-family: "Geist", sans-serif; font-weight: 200; font-style: normal; }
-.geist-light { font-family: "Geist", sans-serif; font-weight: 300; font-style: normal; }
-.geist-regular { font-family: "Geist", sans-serif; font-weight: 400; font-style: normal; }
-.geist-medium { font-family: "Geist", sans-serif; font-weight: 500; font-style: normal; }
-.geist-semibold { font-family: "Geist", sans-serif; font-weight: 600; font-style: normal; }
-.geist-bold { font-family: "Geist", sans-serif; font-weight: 700; font-style: normal; }
-
-.inter-thin { font-family: "Inter", sans-serif; font-weight: 100; font-style: normal; }
-.inter-extralight { font-family: "Inter", sans-serif; font-weight: 200; font-style: normal; }
-.inter-light { font-family: "Inter", sans-serif; font-weight: 300; font-style: normal; }
-.inter-regular { font-family: "Inter", sans-serif; font-weight: 400; font-style: normal; }
-.inter-medium { font-family: "Inter", sans-serif; font-weight: 500; font-style: normal; }
-.inter-semibold { font-family: "Inter", sans-serif; font-weight: 600; font-style: normal; }
-.inter-bold { font-family: "Inter", sans-serif; font-weight: 700; font-style: normal; }
-
-/* Custom animations */
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slide-in-from-right {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
-}
-
-@keyframes pulse-subtle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.8; }
-}
-
-.animate-fade-in { animation: fade-in 0.5s ease-out; }
-.animate-slide-in-right { animation: slide-in-from-right 0.3s ease-out; }
-.animate-pulse-subtle { animation: pulse-subtle 2s infinite; }
-
-/* Glass morphism effect */
-.glass {
-  backdrop-filter: blur(16px) saturate(180%);
-  background-color: rgba(255, 255, 255, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.125);
-}
-
-.glass-dark {
-  backdrop-filter: blur(16px) saturate(180%);
-  background-color: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.125);
-}
-
-/* Smooth hover transitions */
-.hover-lift {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.hover-lift:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
-}
-
-/* Typography hierarchy for better readability */
+/* Jony Ive Inspired Typography System */
 .text-display {
   font-size: 2.25rem;
   line-height: 2.5rem;
   font-weight: 700;
-  font-family: "Geist", sans-serif;
+  letter-spacing: -0.05em;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 .text-headline {
   font-size: 1.875rem;
   line-height: 2.25rem;
   font-weight: 600;
-  font-family: "Geist", sans-serif;
+  letter-spacing: -0.025em;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 .text-title {
-  font-size: 1.5rem;
-  line-height: 2rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
   font-weight: 500;
-  font-family: "Geist", sans-serif;
+  letter-spacing: -0.0125em;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 .text-body {
   font-size: 1rem;
   line-height: 1.5rem;
   font-weight: 400;
-  font-family: "Inter", sans-serif;
+  letter-spacing: 0;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 .text-caption {
   font-size: 0.875rem;
   line-height: 1.25rem;
   font-weight: 400;
+  letter-spacing: 0.0125em;
   color: hsl(var(--color-muted-foreground));
-  font-family: "Inter", sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 .text-micro {
   font-size: 0.75rem;
   line-height: 1rem;
-  font-weight: 400;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
   color: hsl(var(--color-muted-foreground));
-  font-family: "Inter", sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
+/* Flat UI Design Elements */
+.flat-card {
+  background: hsl(var(--color-card));
+  border: 1px solid hsl(var(--color-border));
+  border-radius: var(--radius);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flat-card:hover {
+  border-color: hsl(var(--color-primary) / 0.5);
+  box-shadow: 0 0 0 1px hsl(var(--color-primary) / 0.1);
+}
+
+.flat-button {
+  background: hsl(var(--color-primary));
+  color: hsl(var(--color-primary-foreground));
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  letter-spacing: 0.0125em;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.flat-button:hover {
+  background: hsl(var(--color-primary) / 0.9);
+  transform: translateY(-1px);
+}
+
+.flat-button:active {
+  transform: translateY(0);
+}
+
+.flat-input {
+  background: hsl(var(--color-input));
+  border: 1px solid hsl(var(--color-border));
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: hsl(var(--color-foreground));
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flat-input:focus {
+  outline: none;
+  border-color: hsl(var(--color-primary));
+  box-shadow: 0 0 0 3px hsl(var(--color-primary) / 0.1);
+}
+
+/* Glass Morphism for Autonomous UI Feel */
+.glass-surface {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-panel {
+  background: rgba(26, 26, 26, 0.8);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Autonomous Interface Elements */
+.status-indicator {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-indicator::before {
+  content: '';
   width: 6px;
   height: 6px;
+  border-radius: 50%;
+  background: hsl(var(--color-primary));
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+.status-indicator.active::before {
+  background: #10b981;
+}
+
+.status-indicator.warning::before {
+  background: #f59e0b;
+}
+
+.status-indicator.error::before {
+  background: #ef4444;
+}
+
+/* Refined Animations */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.95); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in { animation: fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.animate-slide-up { animation: slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.animate-scale-in { animation: scale-in 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* Scrollbar Design */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -177,9 +246,27 @@
 
 ::-webkit-scrollbar-thumb {
   background: hsl(var(--color-border));
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--color-muted-foreground));
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .text-display {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+  
+  .text-headline {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+  
+  .flat-button {
+    padding: 0.875rem 1.75rem;
+    min-height: 44px; /* iOS touch target */
+  }
 }
