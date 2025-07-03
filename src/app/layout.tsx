@@ -1,20 +1,26 @@
 import "~/styles/globals.css";
 
-import { type Metadata } from "next";
+import { Inter } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
-export const metadata: Metadata = {
-  title: "Dex Dashboard",
-  description: "AI-powered workflow intelligence for senior product engineers",
+const inter = Inter({
+  subsets: ["latin"],
+});
+
+export const metadata = {
+  title: "Dex",
+  description: "Autonomous Workflow Intelligence",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en">
+    <html lang="en" className="">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
@@ -23,7 +29,7 @@ export default function RootLayout({
           rel="stylesheet" 
         />
       </head>
-      <body className="font-geist antialiased">
+      <body className={inter.className}>
         <TRPCReactProvider>{children}</TRPCReactProvider>
       </body>
     </html>

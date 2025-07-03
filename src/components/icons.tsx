@@ -1,249 +1,474 @@
-import { cn } from "~/lib/utils";
+import { ComponentProps } from "react";
 
-interface IconProps {
-  className?: string;
+interface IconProps extends ComponentProps<"svg"> {
   size?: number;
 }
 
-export function TimelineIcon({ className, size = 20 }: IconProps) {
+// Pure Geometric Icons - Jony Ive Inspired
+export function TimelineIcon({ size = 20, className, ...props }: IconProps) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 20 20"
       fill="none"
-      className={cn("stroke-current", className)}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      className={className}
+      {...props}
     >
-      <circle cx="12" cy="12" r="3" />
-      <circle cx="12" cy="4" r="1" />
-      <circle cx="12" cy="20" r="1" />
-      <path d="M12 7v2" />
-      <path d="M12 15v2" />
+      <circle cx="4" cy="4" r="2" fill="currentColor" />
+      <circle cx="4" cy="10" r="2" fill="currentColor" />
+      <circle cx="4" cy="16" r="2" fill="currentColor" />
+      <rect x="8" y="3" width="8" height="2" rx="1" fill="currentColor" />
+      <rect x="8" y="9" width="6" height="2" rx="1" fill="currentColor" />
+      <rect x="8" y="15" width="4" height="2" rx="1" fill="currentColor" />
     </svg>
   );
 }
 
-export function TasksIcon({ className, size = 20 }: IconProps) {
+export function TasksIcon({ size = 20, className, ...props }: IconProps) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 20 20"
       fill="none"
-      className={cn("stroke-current", className)}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      className={className}
+      {...props}
     >
-      <rect x="3" y="5" width="6" height="6" rx="1" />
-      <path d="M7 7l1 1 2-2" />
-      <rect x="3" y="13" width="6" height="6" rx="1" />
-      <path d="M7 15l1 1 2-2" />
-      <path d="M13 6h8" />
-      <path d="M13 12h8" />
-      <path d="M13 18h8" />
+      <rect x="3" y="3" width="14" height="2" rx="1" fill="currentColor" />
+      <rect x="3" y="7" width="10" height="2" rx="1" fill="currentColor" />
+      <rect x="3" y="11" width="12" height="2" rx="1" fill="currentColor" />
+      <rect x="3" y="15" width="8" height="2" rx="1" fill="currentColor" />
     </svg>
   );
 }
 
-export function RulesIcon({ className, size = 20 }: IconProps) {
+export function RulesIcon({ size = 20, className, ...props }: IconProps) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 20 20"
       fill="none"
-      className={cn("stroke-current", className)}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      className={className}
+      {...props}
     >
-      <path d="M3 12h6" />
-      <path d="M15 12h6" />
-      <circle cx="12" cy="12" r="3" />
-      <path d="M3 6h18" />
-      <path d="M3 18h18" />
+      <rect x="2" y="2" width="16" height="16" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
+      <rect x="5" y="6" width="10" height="2" rx="1" fill="currentColor" />
+      <rect x="5" y="10" width="6" height="2" rx="1" fill="currentColor" />
+      <rect x="5" y="14" width="8" height="2" rx="1" fill="currentColor" />
     </svg>
   );
 }
 
-export function SettingsIcon({ className, size = 20 }: IconProps) {
+export function SettingsIcon({ size = 20, className, ...props }: IconProps) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 20 20"
       fill="none"
-      className={cn("stroke-current", className)}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      className={className}
+      {...props}
     >
-      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-      <circle cx="12" cy="12" r="3" />
+      <circle cx="10" cy="10" r="3" stroke="currentColor" strokeWidth="2" fill="none" />
+      <rect x="9" y="2" width="2" height="4" rx="1" fill="currentColor" />
+      <rect x="9" y="14" width="2" height="4" rx="1" fill="currentColor" />
+      <rect x="2" y="9" width="4" height="2" rx="1" fill="currentColor" />
+      <rect x="14" y="9" width="4" height="2" rx="1" fill="currentColor" />
+      <rect x="14.5" y="4" width="2" height="3" rx="1" fill="currentColor" transform="rotate(45 15.5 5.5)" />
+      <rect x="3.5" y="13" width="2" height="3" rx="1" fill="currentColor" transform="rotate(45 4.5 14.5)" />
+      <rect x="3.5" y="4" width="2" height="3" rx="1" fill="currentColor" transform="rotate(-45 4.5 5.5)" />
+      <rect x="14.5" y="13" width="2" height="3" rx="1" fill="currentColor" transform="rotate(-45 15.5 14.5)" />
     </svg>
   );
 }
 
-export function HelpIcon({ className, size = 20 }: IconProps) {
+export function HelpIcon({ size = 20, className, ...props }: IconProps) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 20 20"
       fill="none"
-      className={cn("stroke-current", className)}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      className={className}
+      {...props}
     >
-      <circle cx="12" cy="12" r="10" />
-      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-      <path d="M12 17h.01" />
+      <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="2" fill="none" />
+      <circle cx="10" cy="15" r="1" fill="currentColor" />
+      <path d="M7 7.5C7 6.11929 8.11929 5 9.5 5H10.5C11.8807 5 13 6.11929 13 7.5C13 8.88071 11.8807 10 10.5 10H10V12" 
+            stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
     </svg>
   );
 }
 
-export function SearchIcon({ className, size = 16 }: IconProps) {
+export function SearchIcon({ size = 20, className, ...props }: IconProps) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 20 20"
       fill="none"
-      className={cn("stroke-current", className)}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      className={className}
+      {...props}
     >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.35-4.35" />
+      <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="2" fill="none" />
+      <rect x="13" y="13" width="2" height="5" rx="1" fill="currentColor" transform="rotate(45 14 15.5)" />
     </svg>
   );
 }
 
-export function UserIcon({ className, size = 16 }: IconProps) {
+export function BellIcon({ size = 20, className, ...props }: IconProps) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 20 20"
       fill="none"
-      className={cn("stroke-current", className)}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      className={className}
+      {...props}
     >
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
+      <path d="M6 8C6 5.79086 7.79086 4 10 4C12.2091 4 14 5.79086 14 8V12L16 14H4L6 12V8Z" 
+            fill="currentColor" />
+      <rect x="8" y="16" width="4" height="2" rx="2" fill="currentColor" />
     </svg>
   );
 }
 
-export function LogOutIcon({ className, size = 16 }: IconProps) {
+export function MenuIcon({ size = 20, className, ...props }: IconProps) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 20 20"
       fill="none"
-      className={cn("stroke-current", className)}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      className={className}
+      {...props}
     >
-      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-      <polyline points="16,17 21,12 16,7" />
-      <line x1="21" x2="9" y1="12" y2="12" />
+      <rect x="3" y="5" width="14" height="2" rx="1" fill="currentColor" />
+      <rect x="3" y="9" width="14" height="2" rx="1" fill="currentColor" />
+      <rect x="3" y="13" width="14" height="2" rx="1" fill="currentColor" />
     </svg>
   );
 }
 
-export function CalendarIcon({ className, size = 16 }: IconProps) {
+export function UserIcon({ size = 20, className, ...props }: IconProps) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 20 20"
       fill="none"
-      className={cn("stroke-current", className)}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      className={className}
+      {...props}
     >
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-      <line x1="16" x2="16" y1="2" y2="6" />
-      <line x1="8" x2="8" y1="2" y2="6" />
-      <line x1="3" x2="21" y1="10" y2="10" />
+      <circle cx="10" cy="7" r="4" fill="currentColor" />
+      <path d="M4 18C4 14.6863 6.68629 12 10 12C13.3137 12 16 14.6863 16 18" 
+            stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
     </svg>
   );
 }
 
-export function PhoneIcon({ className, size = 16 }: IconProps) {
+export function CloseIcon({ size = 20, className, ...props }: IconProps) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 20 20"
       fill="none"
-      className={cn("stroke-current", className)}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      className={className}
+      {...props}
     >
-      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+      <rect x="4" y="9" width="12" height="2" rx="1" fill="currentColor" transform="rotate(45 10 10)" />
+      <rect x="4" y="9" width="12" height="2" rx="1" fill="currentColor" transform="rotate(-45 10 10)" />
     </svg>
   );
 }
 
-export function MailIcon({ className, size = 16 }: IconProps) {
+export function ChevronLeftIcon({ size = 20, className, ...props }: IconProps) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 20 20"
       fill="none"
-      className={cn("stroke-current", className)}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      className={className}
+      {...props}
     >
-      <rect x="2" y="4" width="20" height="16" rx="2" />
-      <path d="m22 7-10 5L2 7" />
+      <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   );
 }
 
-export function MessageIcon({ className, size = 16 }: IconProps) {
+export function ChevronRightIcon({ size = 20, className, ...props }: IconProps) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 24 24"
+      viewBox="0 0 20 20"
       fill="none"
-      className={cn("stroke-current", className)}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      className={className}
+      {...props}
     >
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      <rect x="7" y="6" width="7" height="2" rx="1" fill="currentColor" transform="rotate(45 10.5 7)" />
+      <rect x="7" y="12" width="7" height="2" rx="1" fill="currentColor" transform="rotate(-45 10.5 13)" />
     </svg>
   );
 }
 
-export function DexLogo({ className, size = 32 }: IconProps) {
+export function CheckIcon({ size = 20, className, ...props }: IconProps) {
   return (
-    <div className={cn("rounded-lg bg-primary flex items-center justify-center", className)} style={{ width: size, height: size }}>
-      <img 
-        src="https://framerusercontent.com/images/15gA0OLUnI6OxcHIeCHtQsBhs.png" 
-        alt="Dex" 
-        width={size * 0.7} 
-        height={size * 0.7}
-        className="object-contain"
-      />
-    </div>
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <rect x="3" y="9" width="6" height="2" rx="1" fill="currentColor" transform="rotate(-45 6 10)" />
+      <rect x="8" y="12" width="10" height="2" rx="1" fill="currentColor" transform="rotate(-45 13 13)" />
+    </svg>
+  );
+}
+
+export function FilterIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <rect x="2" y="4" width="16" height="2" rx="1" fill="currentColor" />
+      <rect x="4" y="8" width="12" height="2" rx="1" fill="currentColor" />
+      <rect x="6" y="12" width="8" height="2" rx="1" fill="currentColor" />
+      <rect x="8" y="16" width="4" height="2" rx="1" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function TrendingUpIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <path d="M3 15L7 11L11 13L17 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <rect x="13" y="5" width="6" height="2" rx="1" fill="currentColor" />
+      <rect x="17" y="5" width="2" height="6" rx="1" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function SparklesIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <rect x="9" y="2" width="2" height="6" rx="1" fill="currentColor" />
+      <rect x="6" y="5" width="8" height="2" rx="1" fill="currentColor" />
+      <rect x="14" y="8" width="2" height="4" rx="1" fill="currentColor" />
+      <rect x="12" y="9" width="6" height="2" rx="1" fill="currentColor" />
+      <rect x="3" y="12" width="2" height="4" rx="1" fill="currentColor" />
+      <rect x="1" y="13" width="6" height="2" rx="1" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function ClockIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="2" fill="none" />
+      <rect x="9" y="6" width="2" height="4" rx="1" fill="currentColor" />
+      <rect x="9" y="9" width="4" height="2" rx="1" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function ExternalLinkIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <rect x="4" y="4" width="10" height="10" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
+      <rect x="13" y="3" width="4" height="2" rx="1" fill="currentColor" />
+      <rect x="15" y="3" width="2" height="4" rx="1" fill="currentColor" />
+      <rect x="10" y="6" width="7" height="2" rx="1" fill="currentColor" transform="rotate(45 13.5 7)" />
+    </svg>
+  );
+}
+
+export function PlusIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <rect x="9" y="4" width="2" height="12" rx="1" fill="currentColor" />
+      <rect x="4" y="9" width="12" height="2" rx="1" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function ArrowRightIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <rect x="3" y="9" width="12" height="2" rx="1" fill="currentColor" />
+      <rect x="12" y="6" width="6" height="2" rx="1" fill="currentColor" transform="rotate(45 15 7)" />
+      <rect x="12" y="12" width="6" height="2" rx="1" fill="currentColor" transform="rotate(-45 15 13)" />
+    </svg>
+  );
+}
+
+// Status and Action Icons
+export function SuccessIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <circle cx="10" cy="10" r="8" fill="rgb(34 197 94)" />
+      <rect x="5" y="9" width="4" height="2" rx="1" fill="white" transform="rotate(-45 7 10)" />
+      <rect x="8" y="12" width="7" height="2" rx="1" fill="white" transform="rotate(-45 11.5 13)" />
+    </svg>
+  );
+}
+
+export function WarningIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <circle cx="10" cy="10" r="8" fill="rgb(245 158 11)" />
+      <rect x="9" y="6" width="2" height="6" rx="1" fill="white" />
+      <circle cx="10" cy="14" r="1" fill="white" />
+    </svg>
+  );
+}
+
+export function ErrorIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <circle cx="10" cy="10" r="8" fill="rgb(239 68 68)" />
+      <rect x="6" y="9" width="8" height="2" rx="1" fill="white" transform="rotate(45 10 10)" />
+      <rect x="6" y="9" width="8" height="2" rx="1" fill="white" transform="rotate(-45 10 10)" />
+    </svg>
+  );
+}
+
+export function CalendarIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <rect x="3" y="4" width="14" height="13" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
+      <rect x="2" y="7" width="16" height="2" rx="1" fill="currentColor" />
+      <rect x="6" y="2" width="2" height="4" rx="1" fill="currentColor" />
+      <rect x="12" y="2" width="2" height="4" rx="1" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function PhoneIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <rect x="4" y="2" width="12" height="16" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
+      <rect x="7" y="5" width="6" height="2" rx="1" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function MailIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <rect x="2" y="5" width="16" height="10" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
+      <path d="M3 6L10 11L17 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
+    </svg>
+  );
+}
+
+export function MessageIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
+      <rect x="5" y="8" width="10" height="2" rx="1" fill="currentColor" />
+    </svg>
   );
 } 

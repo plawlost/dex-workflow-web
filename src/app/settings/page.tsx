@@ -1,10 +1,10 @@
 import { DashboardLayout } from "../_components/dashboard-layout";
-import { SettingsPage } from "../_components/settings-page";
+import { SettingsPage as SettingsComponent } from "../_components/settings-page";
 
-export default function Settings() {
+export default function SettingsPage() {
   return (
     <DashboardLayout>
-      <SettingsPage />
+      <SettingsComponent />
     </DashboardLayout>
   );
 } 

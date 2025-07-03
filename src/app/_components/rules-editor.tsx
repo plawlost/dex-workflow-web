@@ -1,184 +1,97 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Editor from "@monaco-editor/react";
-import { Play, Save, RotateCcw, Star, AlertTriangle, Filter } from "lucide-react";
-import { mockRecipes, type Recipe } from "~/lib/mock-data";
+import { cn } from "~/lib/utils";
+import { Button } from "~/components/ui/button";
+
+const recipes = [
+  {
+    name: "High Priority Intros",
+    description: "Auto-tag messages containing introduction requests from key domains",
+    stars: 4,
+    code: `triggers:
+- type: email
+  conditions:
+    - contains: ["introduce", "introduction", "connect you with"]
+    - from_domain: ["linkedin.com", "techcorp.com", "venture.capital"]
+- type: slack
+  conditions:
+    - contains: ["intro", "meet", "connect"]
+    - channel_type: "dm"
+actions:
+- add_tag: "high-priority"
+- add_tag: "introduction"
+- notify_slack:
+    channel: "#intros"
+    message: "New high-priority introduction request from {{contact_name}}"
+- create_task:
+    title: "Process introduction request from {{contact_name}}"
+    due: "+2 hours"
+    priority: "high"`,
+  },
+  { name: "Spam Filter", description: "Filter out promotional content and automated messages", stars: 5 },
+  { name: "Warm Lead Detection", description: "Identify and prioritize potential warm leads and opportunities", stars: 3 },
+  { name: "Smart Follow-up Reminders", description: "Create intelligent follow-up tasks based on conversation context", stars: 4 },
+];
 
 export function RulesEditor() {
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(mockRecipes[0] || null);
-  const [editorValue, setEditorValue] = useState(selectedRecipe?.yaml || "");
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-
-  // Debounced save effect
-  useEffect(() => {
-    if (editorValue !== selectedRecipe?.yaml) {
-      const timeout = setTimeout(() => {
-        handleSave();
-      }, 2000); // 2 second debounce
-
-      return () => clearTimeout(timeout);
-    }
-  }, [editorValue]);
-
-  const handleSave = async () => {
-    setSaveStatus("saving");
-    setIsSaving(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    setSaveStatus("saved");
-    setIsSaving(false);
-    
-    // Show toast
-    setTimeout(() => setSaveStatus("idle"), 2000);
-  };
-
-  const handleRecipeSelect = (recipe: Recipe) => {
-    setSelectedRecipe(recipe);
-    setEditorValue(recipe.yaml);
-  };
-
-  const handleReset = () => {
-    if (selectedRecipe) {
-      setEditorValue(selectedRecipe.yaml);
-    }
-  };
-
-  const filteredRecipes = selectedCategory === "all" 
-    ? mockRecipes 
-    : mockRecipes.filter(recipe => recipe.category === selectedCategory);
+  const [selectedRecipe, setSelectedRecipe] = useState(recipes[0]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Rules Editor</h1>
-        <div className="flex items-center gap-2">
-          {saveStatus === "saved" && (
-            <span className="text-sm text-green-600 animate-fade-in">
-              Rules live ✓
-            </span>
-          )}
-          <button
-            onClick={handleSave}
-            disabled={isSaving}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
-          >
-            <Save size={16} strokeWidth={1.5} />
-            {isSaving ? "Saving..." : "Save"}
-          </button>
+    <div className="grid h-full grid-cols-[350px_1fr] gap-4">
+      <div className="flex flex-col gap-4">
+        <div className="rounded-lg border bg-card p-4">
+          <h2 className="text-lg font-semibold">Preset Recipes</h2>
+        </div>
+        <div className="space-y-2">
+          {recipes.map((recipe) => (
+            <button
+              key={recipe.name}
+              onClick={() => setSelectedRecipe(recipe)}
+              className={cn(
+                "w-full rounded-lg border p-4 text-left transition-colors",
+                selectedRecipe.name === recipe.name
+                  ? "bg-muted"
+                  : "hover:bg-muted/50"
+              )}
+            >
+              <div className="flex justify-between">
+                <h3 className="font-semibold">{recipe.name}</h3>
+                <div className="flex items-center gap-1">
+                  {recipe.stars}
+                  <span className="text-yellow-500">★</span>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">{recipe.description}</p>
+            </button>
+          ))}
         </div>
       </div>
-
-      {/* Split View */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-200px)]">
-        
-        {/* Left Panel - Preset Recipes */}
-        <div className="lg:col-span-1 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="font-medium">Preset Recipes</h2>
-            
-            {/* Category Filter */}
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-3 py-1 bg-white border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">All</option>
-              <option value="priority">Priority</option>
-              <option value="automation">Automation</option>
-              <option value="filter">Filter</option>
-            </select>
-          </div>
-
-          <div className="space-y-2 overflow-y-auto max-h-full">
-            {filteredRecipes.map((recipe) => (
-              <button
-                key={recipe.id}
-                onClick={() => handleRecipeSelect(recipe)}
-                className={`w-full text-left p-4 rounded-lg border transition-all hover:shadow-sm ${
-                  selectedRecipe?.id === recipe.id
-                    ? "border-blue-500 bg-blue-50"
-                    : "border-gray-200 hover:border-gray-300"
-                }`}
-              >
-                <div className="flex items-start justify-between mb-2">
-                  <h3 className="font-medium text-sm">{recipe.name}</h3>
-                  <div className="flex items-center gap-1">
-                    {recipe.isPopular && (
-                      <Star size={12} strokeWidth={1.5} className="text-yellow-500 fill-current" />
-                    )}
-                    <div className={`w-2 h-2 rounded-full ${
-                      recipe.category === "priority" ? "bg-red-400" :
-                      recipe.category === "automation" ? "bg-blue-400" : "bg-gray-400"
-                    }`} />
-                  </div>
-                </div>
-                <p className="text-xs text-gray-600 leading-relaxed">
-                  {recipe.description}
-                </p>
-              </button>
-            ))}
+      <div className="flex flex-col">
+        <div className="flex items-center justify-between rounded-t-lg border bg-card p-4">
+          <h2 className="text-lg font-semibold">{selectedRecipe.name}</h2>
+          <div className="flex items-center gap-2">
+            <Button variant="outline">Reset</Button>
+            <Button>Test</Button>
+            <Button variant="default">Save</Button>
           </div>
         </div>
-
-        {/* Right Panel - Code Editor */}
-        <div className="lg:col-span-2 flex flex-col space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="font-medium">
-              {selectedRecipe ? selectedRecipe.name : "Custom Rule"}
-            </h2>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleReset}
-                className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-              >
-                <RotateCcw size={14} strokeWidth={1.5} />
-                Reset
-              </button>
-              <button className="flex items-center gap-2 px-3 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors">
-                <Play size={14} strokeWidth={1.5} />
-                Test
-              </button>
-            </div>
+        <div className="flex-grow rounded-b-lg border border-t-0">
+          <Editor
+            height="100%"
+            language="yaml"
+            theme="vs-dark"
+            value={selectedRecipe.code}
+            options={{ minimap: { enabled: false } }}
+          />
+        </div>
+        <div className="flex items-center justify-between rounded-lg border bg-card p-2 text-sm">
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-green-500" />
+            <span>YAML syntax valid</span>
           </div>
-
-          {/* Monaco Editor */}
-          <div className="flex-1 border border-gray-200 rounded-lg overflow-hidden">
-            <Editor
-              height="100%"
-              defaultLanguage="yaml"
-              value={editorValue}
-              onChange={(value) => setEditorValue(value || "")}
-              theme="vs-light"
-              options={{
-                minimap: { enabled: false },
-                fontSize: 14,
-                lineNumbers: "on",
-                scrollBeyondLastLine: false,
-                automaticLayout: true,
-                tabSize: 2,
-                insertSpaces: true,
-                wordWrap: "on",
-                folding: true,
-                bracketPairColorization: { enabled: true },
-              }}
-            />
-          </div>
-
-          {/* Status Bar */}
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg text-sm">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full" />
-              <span className="text-gray-600">YAML syntax valid</span>
-            </div>
-            <div className="text-gray-500">
-              Last saved: {saveStatus === "saved" ? "just now" : "auto-save in 2s"}
-            </div>
-          </div>
+          <span className="text-muted-foreground">Last saved: auto-save in 2s</span>
         </div>
       </div>
     </div>
