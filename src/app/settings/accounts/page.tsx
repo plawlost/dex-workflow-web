@@ -13,7 +13,7 @@ const connectionServices = [
     description: "Connect your Slack workspace for team communication",
     icon: "💬",
     color: "bg-purple-500",
-    getConnection: AuthService.getSlackConnection,
+    getConnection: () => AuthService.getSlackConnection(),
   },
   {
     id: "gmail",
@@ -21,7 +21,7 @@ const connectionServices = [
     description: "Connect Gmail for email automation and management",
     icon: "📧",
     color: "bg-red-500",
-    getConnection: AuthService.getGmailConnection,
+    getConnection: () => AuthService.getGmailConnection(),
   },
   {
     id: "notion",
@@ -29,7 +29,7 @@ const connectionServices = [
     description: "Connect Notion for document and database management",
     icon: "📝",
     color: "bg-gray-800",
-    getConnection: AuthService.getNotionConnection,
+    getConnection: () => AuthService.getNotionConnection(),
   },
 ];
 
@@ -42,9 +42,8 @@ export default function AccountsPage() {
     
     setConnectingService(service.id);
     try {
-      const authUrl = await service.getConnection();
-      // Redirect to the auth URL
-      window.location.href = authUrl;
+      // The connection method now handles the redirect directly
+      await service.getConnection();
     } catch (error) {
       console.error(`Failed to connect ${service.name}:`, error);
       alert(`Failed to connect ${service.name}. Please try again.`);
@@ -134,7 +133,6 @@ export default function AccountsPage() {
                   onClick={() => handleConnect(service)}
                   disabled={connectingService === service.id}
                   className="bg-white/80 hover:bg-white/90 text-deep-gray border border-white/20"
-                  variant="outline"
                 >
                   {connectingService === service.id ? (
                     <div className="flex items-center gap-2">

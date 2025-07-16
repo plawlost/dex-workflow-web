@@ -9,8 +9,12 @@ export interface BackendUser {
 }
 
 export interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
+  success: boolean;
+  message: string;
+  tokens: {
+    accessToken: string;
+    refreshToken: string;
+  };
   user: {
     id: string;
     email: string;
@@ -35,7 +39,7 @@ class BackendAPI {
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
     
-    const response = await fetch(url, {
+    const response = await fetch(url, {      
       headers: {
         "Content-Type": "application/json",
         ...options.headers,
@@ -69,34 +73,25 @@ class BackendAPI {
   async getProfile(accessToken: string) {
     return this.request("/auth/me", {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
       },
     });
   }
 
-  // Connection endpoints
-  async getSlackConnection(accessToken: string): Promise<ConnectionResponse> {
-    return this.request<ConnectionResponse>("/auth/slack", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+  // Connection endpoints - these redirect directly
+  async getSlackConnection(accessToken: string): Promise<void> {
+    const url = `${this.baseUrl}/auth/slack?token=${encodeURIComponent(accessToken)}`;
+    window.open(url, '_blank', 'width=600,height=600');
   }
 
-  async getGmailConnection(accessToken: string): Promise<ConnectionResponse> {
-    return this.request<ConnectionResponse>("/auth/gmail/connect", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+  async getGmailConnection(accessToken: string): Promise<void> {
+    const url = `${this.baseUrl}/auth/gmail/connect?token=${encodeURIComponent(accessToken)}`;
+    window.open(url, '_blank', 'width=600,height=600');
   }
 
-  async getNotionConnection(accessToken: string): Promise<ConnectionResponse> {
-    return this.request<ConnectionResponse>("/auth/notion", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+  async getNotionConnection(accessToken: string): Promise<void> {
+    const url = `${this.baseUrl}/auth/notion?token=${encodeURIComponent(accessToken)}`;
+    window.open(url, '_blank', 'width=600,height=600');
   }
 }
 

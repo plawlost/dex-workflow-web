@@ -42,22 +42,25 @@ export class AuthService {
     try {
       // 1. Sign up with Supabase
       const supabaseResult = await SupabaseAuthService.signUp(email, password, name);
+      console.log('Supabase signup result:', supabaseResult);
       
       // 2. Create account in your backend (dummy login)
-      const backendResult = await backendAPI.signup(email, email, name); // Using email as password
+      const backendResult = await backendAPI.signup(email, password, name);
+      console.log('Backend signup result:', backendResult);
       
       // 3. Store backend tokens
       this.storeTokens({
-        accessToken: backendResult.accessToken,
-        refreshToken: backendResult.refreshToken,
+        accessToken: backendResult.tokens.accessToken,
+        refreshToken: backendResult.tokens.refreshToken,
       });
+      console.log('Tokens stored:', this.getStoredTokens());
 
       return {
         id: backendResult.user.id,
         email: backendResult.user.email,
         name: backendResult.user.name,
-        accessToken: backendResult.accessToken,
-        refreshToken: backendResult.refreshToken,
+        accessToken: backendResult.tokens.accessToken,
+        refreshToken: backendResult.tokens.refreshToken,
         supabaseUser: supabaseResult.user,
       };
     } catch (error) {
@@ -71,22 +74,25 @@ export class AuthService {
     try {
       // 1. Sign in with Supabase
       const supabaseResult = await SupabaseAuthService.signIn(email, password);
+      console.log('Supabase signin result:', supabaseResult);
       
       // 2. Login to your backend (dummy login with email as password)
-      const backendResult = await backendAPI.login(email, email);
+      const backendResult = await backendAPI.login(email, password);
+      console.log('Backend signin result:', backendResult);
       
       // 3. Store backend tokens
       this.storeTokens({
-        accessToken: backendResult.accessToken,
-        refreshToken: backendResult.refreshToken,
+        accessToken: backendResult.tokens.accessToken,
+        refreshToken: backendResult.tokens.refreshToken,
       });
+      console.log('Tokens stored:', this.getStoredTokens());
 
       return {
         id: backendResult.user.id,
         email: backendResult.user.email,
         name: backendResult.user.name,
-        accessToken: backendResult.accessToken,
-        refreshToken: backendResult.refreshToken,
+        accessToken: backendResult.tokens.accessToken,
+        refreshToken: backendResult.tokens.refreshToken,
         supabaseUser: supabaseResult.user,
       };
     } catch (error) {
@@ -116,8 +122,16 @@ export class AuthService {
       const tokens = this.getStoredTokens();
       if (!tokens) return null;
 
+      console.log('Stored tokens:', tokens);
+
       // Get user profile from backend
-      const profile = await backendAPI.getProfile(tokens.accessToken);
+      const profile = await backendAPI.getProfile(tokens.accessToken) as {
+        id: string;
+        email: string;
+        name: string;
+      };
+
+      console.log('Profile from backend:', profile);
       
       // Get Supabase user
       const supabaseUser = await SupabaseAuthService.getCurrentUser();
@@ -145,27 +159,24 @@ export class AuthService {
   }
 
   // Connection methods using backend API
-  static async getSlackConnection(): Promise<string> {
+  static async getSlackConnection(): Promise<void> {
     const accessToken = this.getAccessToken();
     if (!accessToken) throw new Error('Not authenticated');
     
-    const response = await backendAPI.getSlackConnection(accessToken);
-    return response.authUrl;
+    await backendAPI.getSlackConnection(accessToken);
   }
 
-  static async getGmailConnection(): Promise<string> {
+  static async getGmailConnection(): Promise<void> {
     const accessToken = this.getAccessToken();
     if (!accessToken) throw new Error('Not authenticated');
     
-    const response = await backendAPI.getGmailConnection(accessToken);
-    return response.authUrl;
+    await backendAPI.getGmailConnection(accessToken);
   }
 
-  static async getNotionConnection(): Promise<string> {
+  static async getNotionConnection(): Promise<void> {
     const accessToken = this.getAccessToken();
     if (!accessToken) throw new Error('Not authenticated');
     
-    const response = await backendAPI.getNotionConnection(accessToken);
-    return response.authUrl;
+    await backendAPI.getNotionConnection(accessToken);
   }
 }
