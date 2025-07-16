@@ -30,7 +30,7 @@ class BackendAPI {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = env.NEXT_PUBLIC_BACKEND_URL;
+    this.baseUrl = env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
   }
 
   private async request<T>(

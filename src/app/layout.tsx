@@ -11,7 +11,7 @@ const inter = Inter({
 export const metadata = {
   title: "Dex",
   description: "Autonomous Workflow Intelligence",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/logo.png" }],
 };
 
 export default function RootLayout({

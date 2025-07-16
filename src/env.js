@@ -14,7 +14,8 @@ export const env = createEnv({
     AUTH_SLACK_SECRET: z.string().optional(),
     AUTH_NOTION_ID: z.string().optional(),
     AUTH_NOTION_SECRET: z.string().optional(),
-    DATABASE_URL: z.string().url(),
+    DATABASE_URL: z.string().url().optional(),
+    SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
     NODE_ENV: z.enum(["development", "test", "production"]),
     AUTH_URL: z.preprocess(
       (str) => (str && typeof str === 'string' ? new URL(str) : undefined),
@@ -28,7 +29,7 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    NEXT_PUBLIC_BACKEND_URL: z.string().url(),
+    NEXT_PUBLIC_BACKEND_URL: z.string().url().optional(),
     NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
     NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
   },
@@ -45,10 +46,11 @@ export const env = createEnv({
     AUTH_SLACK_SECRET: process.env.AUTH_SLACK_SECRET,
     AUTH_NOTION_ID: process.env.AUTH_NOTION_ID,
     AUTH_NOTION_SECRET: process.env.AUTH_NOTION_SECRET,
-    DATABASE_URL: process.env.DATABASE_URL,
+    DATABASE_URL: process.env.DATABASE_URL || undefined,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     NODE_ENV: process.env.NODE_ENV,
     AUTH_URL: process.env.AUTH_URL,
-    NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
+    NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL || undefined,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   },

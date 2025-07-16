@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useAuth } from "~/contexts/auth-context";
-import { AuthService } from "~/lib/auth-service";
+import { SiSlack, SiGmail, SiNotion, SiGoogle } from "react-icons/si";
 import { DashboardLayout } from "~/app/_components/dashboard-layout";
 import { Button } from "~/components/ui/button";
 
@@ -11,30 +11,30 @@ const connectionServices = [
     id: "slack",
     name: "Slack",
     description: "Connect your Slack workspace for team communication",
-    icon: "💬",
+    icon: <SiSlack size={24} color="#4A154B" />,
     color: "bg-purple-500",
-    getConnection: () => AuthService.getSlackConnection(),
+    status: "available",
   },
   {
     id: "gmail",
-    name: "Gmail",
+    name: "Gmail", 
     description: "Connect Gmail for email automation and management",
-    icon: "📧",
+    icon: <SiGmail size={24} color="#D44638" />,
     color: "bg-red-500",
-    getConnection: () => AuthService.getGmailConnection(),
+    status: "available",
   },
   {
     id: "notion",
     name: "Notion",
-    description: "Connect Notion for document and database management",
-    icon: "📝",
+    description: "Connect Notion for document and database management", 
+    icon: <SiNotion size={24} />,
     color: "bg-gray-800",
-    getConnection: () => AuthService.getNotionConnection(),
+    status: "available",
   },
 ];
 
 export default function AccountsPage() {
-  const { user, loading } = useAuth();
+  const { user, loading, refreshBackendToken } = useAuth();
   const [connectingService, setConnectingService] = useState<string | null>(null);
 
   const handleConnect = async (service: typeof connectionServices[0]) => {
@@ -42,14 +42,39 @@ export default function AccountsPage() {
     
     setConnectingService(service.id);
     try {
-      // The connection method now handles the redirect directly
-      await service.getConnection();
+      // Get the backend access token (not Supabase token)
+      const backendToken = user.backendToken;
+      if (!backendToken) {
+        throw new Error('No backend access token found. Please sign in again.');
+      }
+
+      // Map service IDs to backend endpoints
+      const endpointMap = {
+        slack: '/auth/slack',
+        gmail: '/auth/gmail/connect', 
+        notion: '/auth/notion'
+      };
+
+      const endpoint = endpointMap[service.id as keyof typeof endpointMap];
+      if (!endpoint) {
+        throw new Error(`Unknown service: ${service.id}`);
+      }
+
+      // Make request to your backend with backend token as query param
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://dex-backend-main.vercel.app';
+      const authUrl = `${backendUrl}${endpoint}?token=${encodeURIComponent(backendToken)}`;
+      
+      console.log(`Connecting to ${service.name} via:`, authUrl);
+      
+      // Redirect to the OAuth flow
+      window.location.href = authUrl;
+      
     } catch (error) {
       console.error(`Failed to connect ${service.name}:`, error);
       alert(`Failed to connect ${service.name}. Please try again.`);
-    } finally {
       setConnectingService(null);
     }
+    // Note: Don't set connectingService to null here since we're redirecting
   };
 
   if (loading) {
@@ -84,21 +109,43 @@ export default function AccountsPage() {
           </p>
         </div>
 
-        {/* User Info */}
+        {/* Connected Google Account */}
         <div className="glass-surface rounded-xl p-6 border border-white/20 mb-6">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-accent-blue rounded-lg flex items-center justify-center">
-              <span className="text-white font-medium text-lg">
-                {user.name?.charAt(0).toUpperCase()}
-              </span>
+          <h2 className="text-title font-medium text-deep-gray mb-4">
+            Primary Account
+          </h2>
+          <div className="flex items-center justify-between p-4 bg-white/40 backdrop-blur-sm border border-white/10 rounded-lg">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-gray-200">
+                <SiGoogle size={24} />
+              </div>
+              <div>
+                <h3 className="text-body font-medium text-deep-gray">
+                  Google Account
+                </h3>
+                <p className="text-caption text-slate-gray">
+                  {user.email}
+                </p>
+                <p className="text-caption text-slate-gray">
+                  {user.name}
+                </p>
+                {/* Debug info */}
+                <p className="text-xs text-gray-500 mt-1">
+                  Backend Token: {user.backendToken ? '✅ Available' : '❌ Missing'}
+                </p>
+                {!user.backendToken && (
+                  <button 
+                    onClick={refreshBackendToken}
+                    className="text-xs text-blue-500 hover:text-blue-700 mt-1"
+                  >
+                    🔄 Refresh Token
+                  </button>
+                )}
+              </div>
             </div>
-            <div>
-              <h3 className="text-title font-medium text-deep-gray">
-                {user.name}
-              </h3>
-              <p className="text-caption text-slate-gray">
-                {user.email}
-              </p>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-success-green rounded-full"></div>
+              <span className="text-caption text-success-green font-medium">Connected</span>
             </div>
           </div>
         </div>

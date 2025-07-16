@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { SiGoogle, SiSlack, SiNotion } from "react-icons/si";
 import { Button } from "~/components/ui/button";
 import { 
   Dialog, 
@@ -27,17 +28,17 @@ const providerConfig = {
   google: {
     name: "Google",
     color: "bg-blue-500",
-    icon: "🔵"
+    icon: <SiGoogle size={20} color="#4285F4" />
   },
   slack: {
     name: "Slack",
     color: "bg-purple-500", 
-    icon: "💬"
+    icon: <SiSlack size={20} color="#4A154B" />
   },
   notion: {
     name: "Notion",
     color: "bg-gray-800",
-    icon: "📝"
+    icon: <SiNotion size={20} />
   }
 };
 

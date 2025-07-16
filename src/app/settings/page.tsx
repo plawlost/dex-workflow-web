@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { User, LinkSimple, Lightning, Bell } from "@phosphor-icons/react";
 import { DashboardLayout } from "~/app/_components/dashboard-layout";
 import { Button } from "~/components/ui/button";
 
@@ -9,28 +10,28 @@ const settingsPages = [
     title: "Connected Accounts",
     description: "Manage your authentication providers and linked accounts",
     href: "/settings/accounts",
-    icon: "👤",
+    icon: <User size={24} weight="fill" />,
     color: "bg-blue-500"
   },
   {
     title: "Integrations",
     description: "Configure N8N, Slack, and Supabase connections",
     href: "/settings/integrations", 
-    icon: "🔗",
+    icon: <LinkSimple size={24} weight="bold" />,
     color: "bg-green-500"
   },
   {
     title: "Workflow Rules",
     description: "Set up automation rules and triggers",
     href: "/rules",
-    icon: "⚡",
+    icon: <Lightning size={24} weight="fill" />,
     color: "bg-purple-500"
   },
   {
     title: "Notifications",
     description: "Control how and when you receive alerts",
     href: "/settings/notifications",
-    icon: "🔔",
+    icon: <Bell size={24} weight="fill" />,
     color: "bg-orange-500"
   }
 ];

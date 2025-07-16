@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useAuth } from "~/contexts/auth-context";
 import { UserIcon, MenuIcon, SearchIcon, BellIcon } from "~/components/icons";
+import { Gear, SignOut } from "@phosphor-icons/react";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -14,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Input } from "~/components/ui/input";
+import { ThemeToggle } from "~/components/ui/theme-toggle";
 import { MobileTabBar } from "./mobile-tab-bar";
 
 export function TopBar() {
@@ -55,6 +57,9 @@ export function TopBar() {
       
       {/* Actions */}
       <div className="flex items-center gap-3">
+        {/* Theme Toggle */}
+        <ThemeToggle />
+        
         {/* Notifications */}
         <button className="pure-button-ghost relative p-2 rounded-lg">
           <BellIcon className="text-slate-gray" size={18} />
@@ -95,13 +100,13 @@ export function TopBar() {
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/settings">
-                  <span className="icon icon-sm">⚙</span>
+                  <Gear size={16} />
                   Settings
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleSignOut}>
-                <span className="icon icon-sm">↗</span>
+                <SignOut size={16} />
                 Sign out
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -111,11 +116,6 @@ export function TopBar() {
             <Link href="/auth/signin">
               <Button variant="outline" size="sm" className="bg-white/80 hover:bg-white/90">
                 Sign in
-              </Button>
-            </Link>
-            <Link href="/auth/signup">
-              <Button size="sm">
-                Sign up
               </Button>
             </Link>
           </div>

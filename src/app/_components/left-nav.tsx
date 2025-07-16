@@ -50,7 +50,9 @@ export function LeftNav({ isCollapsed, setCollapsed }: LeftNavProps) {
           isCollapsed ? "px-0 justify-center" : "px-6"
         )}>
           <Link href="/" className="flex items-center gap-3 group">
-            <img src="/logo.png" alt="Dex Logo" className="h-8 w-8 transition-transform group-hover:scale-105" />
+            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center p-1 transition-transform group-hover:scale-105">
+              <img src="/logo.png" alt="Dex Logo" className="w-full h-full object-contain" />
+            </div>
             <span className={cn("text-headline font-medium tracking-tight", isCollapsed && "hidden")}>Dex</span>
           </Link>
         </div>

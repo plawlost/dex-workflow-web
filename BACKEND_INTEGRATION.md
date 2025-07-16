@@ -74,16 +74,18 @@ The app integrates with your backend endpoints:
 src/
 ├── lib/
 │   ├── api.ts              # Backend API client
-│   ├── supabase.ts         # Supabase client & auth
-│   └── auth-service.ts     # Unified auth service
+│   └── supabase.ts         # Supabase client & Google OAuth
 ├── contexts/
 │   └── auth-context.tsx    # React auth context
 ├── app/
 │   ├── auth/
-│   │   ├── signin/         # Sign in page
-│   │   └── signup/         # Sign up page
+│   │   ├── signin/         # Google OAuth sign in
+│   │   ├── signup/         # Redirects to signin
+│   │   └── callback/       # OAuth callback handler
+│   ├── api/
+│   │   └── link-n8n-account/ # N8N compatibility API
 │   └── settings/
-│       ├── accounts/       # Service connections
+│       ├── accounts/       # Connected accounts
 │       └── integrations/   # Backend config
 └── components/
     └── auth/               # Auth UI components
@@ -107,30 +109,46 @@ function MyComponent() {
 
 #### Make Authenticated API Calls:
 ```tsx
-import { AuthService } from '~/lib/auth-service';
+import { useAuth } from '~/contexts/auth-context';
+import { supabase } from '~/lib/supabase';
 
-// Get access token for API calls
-const accessToken = AuthService.getAccessToken();
-
-// Use in API requests
-fetch('/api/some-endpoint', {
-  headers: {
-    'Authorization': `Bearer ${accessToken}`
-  }
-});
+function MyComponent() {
+  const { user } = useAuth();
+  
+  const makeAPICall = async () => {
+    // Get current session token
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (session?.access_token) {
+      // Use session token for API requests
+      const response = await fetch('/api/some-endpoint', {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`
+        }
+      });
+    }
+  };
+}
 ```
 
 #### Connect Services:
 ```tsx
-import { AuthService } from '~/lib/auth-service';
+import { useAuth } from '~/contexts/auth-context';
 
-// Get connection URLs
-const slackUrl = await AuthService.getSlackConnection();
-const gmailUrl = await AuthService.getGmailConnection();
-const notionUrl = await AuthService.getNotionConnection();
-
-// Redirect user to OAuth flow
-window.location.href = slackUrl;
+function ConnectionsPage() {
+  const { user } = useAuth();
+  
+  const connectSlack = async () => {
+    // TODO: Implement Slack OAuth connection
+    // This will redirect to Slack OAuth flow
+    console.log('Connecting Slack for user:', user?.email);
+  };
+  
+  const connectGmail = async () => {
+    // TODO: Implement Gmail OAuth connection
+    console.log('Connecting Gmail for user:', user?.email);
+  };
+}
 ```
 
 ### 7. Development

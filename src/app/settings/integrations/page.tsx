@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { SiN8N, SiSlack, SiSupabase } from "react-icons/si";
+import { CheckCircle } from "@phosphor-icons/react";
 import { DashboardLayout } from "~/app/_components/dashboard-layout";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -56,7 +58,7 @@ export default function IntegrationsPage() {
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">N8</span>
+                <SiN8N size={20} color="white" />
               </div>
               <div>
                 <h3 className="text-title font-medium text-deep-gray">
@@ -79,7 +81,7 @@ export default function IntegrationsPage() {
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
-                <span className="text-white text-lg">💬</span>
+                <SiSlack size={20} color="#4A154B" />
               </div>
               <div>
                 <h3 className="text-title font-medium text-deep-gray">
@@ -103,7 +105,7 @@ export default function IntegrationsPage() {
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">SB</span>
+                <SiSupabase size={20} color="#3ECF8E" />
               </div>
               <div>
                 <h3 className="text-title font-medium text-deep-gray">
@@ -137,7 +139,7 @@ export default function IntegrationsPage() {
                 </div>
               ) : saved ? (
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">✓</span>
+                  <CheckCircle size={18} weight="fill" />
                   Saved Successfully
                 </div>
               ) : (
