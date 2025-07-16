@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useAuth } from "~/contexts/auth-context";
 import { UserIcon, MenuIcon, SearchIcon, BellIcon } from "~/components/icons";
 
 import { Button } from "~/components/ui/button";
@@ -16,6 +17,22 @@ import { Input } from "~/components/ui/input";
 import { MobileTabBar } from "./mobile-tab-bar";
 
 export function TopBar() {
+  const { user, loading, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
+  const getUserInitials = (name?: string | null) => {
+    if (!name) return "U";
+    return name
+      .split(" ")
+      .map(n => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
   return (
     <header className="glass-panel flex h-16 items-center gap-6 px-6 md:px-8 border-b border-white/20">
       <MobileTabBar />
@@ -45,37 +62,64 @@ export function TopBar() {
         </button>
         
         {/* User Menu */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="pure-button-ghost flex items-center gap-3 px-3 py-2 rounded-lg">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center"
-                   style={{ background: 'rgb(var(--accent))' }}>
-                <span className="text-white text-sm font-medium">YC</span>
-              </div>
-              <div className="hidden md:block text-left">
-                <div className="text-caption font-medium" style={{ color: 'rgb(var(--text-primary))' }}>Yagiz Celebi</div>
-                <div className="text-label" style={{ color: 'rgb(var(--text-tertiary))' }}>@yaz</div>
-              </div>
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="glass-surface w-56 border-white/20">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <UserIcon size={16} />
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <span className="icon icon-sm">⚙</span>
-              Settings
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <span className="icon icon-sm">↗</span>
-              Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {loading ? (
+          <div className="w-8 h-8 bg-stone-gray/20 rounded-full animate-pulse" />
+        ) : user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="pure-button-ghost flex items-center gap-3 px-3 py-2 rounded-lg">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center"
+                     style={{ background: 'rgb(var(--accent))' }}>
+                  <span className="text-white text-sm font-medium">
+                    {getUserInitials(user.name)}
+                  </span>
+                </div>
+                <div className="hidden md:block text-left">
+                  <div className="text-caption font-medium" style={{ color: 'rgb(var(--text-primary))' }}>
+                    {user.name || "User"}
+                  </div>
+                  <div className="text-label" style={{ color: 'rgb(var(--text-tertiary))' }}>
+                    {user.email}
+                  </div>
+                </div>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="glass-surface w-56 border-white/20">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href="/settings/accounts">
+                  <UserIcon size={16} />
+                  Connected Accounts
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/settings">
+                  <span className="icon icon-sm">⚙</span>
+                  Settings
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleSignOut}>
+                <span className="icon icon-sm">↗</span>
+                Sign out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <div className="flex gap-2">
+            <Link href="/auth/signin">
+              <Button variant="outline" size="sm" className="bg-white/80 hover:bg-white/90">
+                Sign in
+              </Button>
+            </Link>
+            <Link href="/auth/signup">
+              <Button size="sm">
+                Sign up
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
     </header>
   );

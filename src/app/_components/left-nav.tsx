@@ -97,7 +97,7 @@ export function LeftNav({ isCollapsed, setCollapsed }: LeftNavProps) {
 
 function NavItemLink({ item, pathname, isCollapsed }: { item: NavItem; pathname: string; isCollapsed: boolean }) {
   const Icon = item.icon;
-  const isActive = pathname === item.href;
+  const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
   
   return (
     <Link

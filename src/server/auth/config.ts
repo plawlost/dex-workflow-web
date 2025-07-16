@@ -1,9 +1,9 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
 
 import { db } from "~/server/db";
 import { env } from "~/env";
+import { providers } from "./providers";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -32,24 +32,7 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authConfig = {
-  providers: [
-    // Only include Discord provider if credentials are available
-    ...(env.AUTH_DISCORD_ID && env.AUTH_DISCORD_SECRET
-      ? [DiscordProvider({
-          clientId: env.AUTH_DISCORD_ID,
-          clientSecret: env.AUTH_DISCORD_SECRET,
-        })]
-      : []),
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
-  ],
+  providers,
   // Only use PrismaAdapter if DATABASE_URL is available
   ...(env.DATABASE_URL ? { adapter: PrismaAdapter(db) } : {}),
   callbacks: {
@@ -60,5 +43,30 @@ export const authConfig = {
         id: user?.id || "mock-user-id",
       },
     }),
+    async signIn({ user, account, profile }) {
+      // Allow account linking for existing users
+      if (account && user.email) {
+        const existingUser = await db.user.findUnique({
+          where: { email: user.email },
+          include: { accounts: true }
+        });
+
+        if (existingUser) {
+          // Check if this provider is already linked
+          const existingAccount = existingUser.accounts.find(
+            acc => acc.provider === account.provider
+          );
+          
+          if (existingAccount && existingAccount.providerAccountId !== account.providerAccountId) {
+            // Provider already linked to different account
+            return false;
+          }
+        }
+      }
+      return true;
+    },
+  },
+  pages: {
+    signIn: "/auth/signin",
   },
 } satisfies NextAuthConfig;
