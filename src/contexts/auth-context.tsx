@@ -77,13 +77,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const supabaseUser = await SupabaseAuthService.getCurrentUser();
       if (supabaseUser) {
-        const backendToken = getBackendToken();
+        const unparsedBackendToken = getBackendToken();
+        const backendToken = unparsedBackendToken ? JSON.parse(unparsedBackendToken) : null;
+
+        console.log('Backend token:', backendToken);
         const authUser: AuthUser = {
           id: supabaseUser.id,
           email: supabaseUser.email || '',
           name: supabaseUser.user_metadata.full_name || supabaseUser.user_metadata.name || null,
           avatar_url: supabaseUser.user_metadata.avatar_url || supabaseUser.user_metadata.picture || null,
-          backendToken,
+          backendToken: backendToken ? backendToken.accessToken : null,
         };
         setUser(authUser);
       } else {

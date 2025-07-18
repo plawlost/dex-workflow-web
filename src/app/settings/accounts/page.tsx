@@ -43,7 +43,7 @@ export default function AccountsPage() {
     setConnectingService(service.id);
     try {
       // Get the backend access token (not Supabase token)
-      const backendToken = user.backendToken;
+      const backendToken = JSON.parse(localStorage.getItem('dex_backend_token') || '{}').accessToken;
       if (!backendToken) {
         throw new Error('No backend access token found. Please sign in again.');
       }
@@ -62,7 +62,7 @@ export default function AccountsPage() {
 
       // Make request to your backend with backend token as query param
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://dex-backend-main.vercel.app';
-      const authUrl = `${backendUrl}${endpoint}?token=${encodeURIComponent(backendToken)}`;
+      const authUrl = `${backendUrl}${endpoint}?token=${backendToken}`;
       
       console.log(`Connecting to ${service.name} via:`, authUrl);
       

@@ -3,6 +3,9 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '~/lib/supabase';
+import { backendAPI } from '~/lib/api';
+
+const localStorageKey = 'dex_backend_token';
 
 export default function AuthCallback() {
   const router = useRouter();
@@ -25,8 +28,29 @@ export default function AuthCallback() {
           return;
         }
 
+        let tokens: {
+          accessToken: string;
+          refreshToken: string;
+        } | null = null;
+
         if (data.session) {
+          // Dummy login to backend
+
+          try {
+            const signUp = await backendAPI.signup(data.session.user.email || "", data.session.user.id, data.session.user.email || '')
+            if (signUp.success) {
+              tokens = signUp.tokens;
+            }
+          } catch (error) {
+            const login = await backendAPI.login(data.session.user.email || '', data.session.user.id || '')
+            // Try signup if message is user not found
+            if (login.success) {
+              tokens = login.tokens;
+            }
+          }
+
           // Successfully authenticated, redirect to dashboard
+          localStorage.setItem(localStorageKey, JSON.stringify(tokens));
           router.push('/');
         } else {
           // No session found, redirect to sign in
