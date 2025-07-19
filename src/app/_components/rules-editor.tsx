@@ -51,7 +51,7 @@ export function RulesEditor() {
               onClick={() => setSelectedRecipe(recipe)}
               className={cn(
                 "w-full rounded-lg border p-4 text-left transition-colors",
-                selectedRecipe.name === recipe.name
+                selectedRecipe?.name === recipe.name
                   ? "bg-muted"
                   : "hover:bg-muted/50"
               )}
@@ -70,7 +70,7 @@ export function RulesEditor() {
       </div>
       <div className="flex flex-col">
         <div className="flex items-center justify-between rounded-t-lg border bg-card p-4">
-          <h2 className="text-lg font-semibold">{selectedRecipe.name}</h2>
+          <h2 className="text-lg font-semibold">{selectedRecipe?.name || "Select a Recipe"}</h2>
           <div className="flex items-center gap-2">
             <Button variant="outline">Reset</Button>
             <Button>Test</Button>
@@ -82,7 +82,7 @@ export function RulesEditor() {
             height="100%"
             language="yaml"
             theme="vs-dark"
-            value={selectedRecipe.code}
+            value={selectedRecipe?.code || ""}
             options={{ minimap: { enabled: false } }}
           />
         </div>

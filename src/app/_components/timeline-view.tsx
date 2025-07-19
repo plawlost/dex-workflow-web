@@ -236,7 +236,9 @@ export function TimelineView() {
         <ContactModal 
           isOpen={isContactModalOpen}
           onClose={handleContactModalClose}
-          contactName={selectedContact}
+          contact={{
+            name: selectedContact,
+          }}
         />
       )}
     </div>

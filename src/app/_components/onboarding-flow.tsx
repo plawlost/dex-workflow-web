@@ -9,7 +9,7 @@ type OnboardingStep = "welcome" | "oauth" | "permissions" | "finish";
 interface Provider {
   id: string;
   name: string;
-  icon: React.ComponentType<{ size?: number; strokeWidth?: number }>;
+  icon: React.ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
   isAvailable: boolean;
 }
 
@@ -138,7 +138,7 @@ export function OnboardingFlow() {
       <div className="text-center space-y-4">
         <h1 className="text-2xl font-semibold">Connect your accounts</h1>
         <p className="text-gray-600 max-w-md mx-auto">
-          Choose which platforms you'd like Dex to monitor and analyze for workflow insights.
+          Choose which platforms you&apos;d like Dex to monitor and analyze for workflow insights.
         </p>
       </div>
 

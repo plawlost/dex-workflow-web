@@ -1,10 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "~/contexts/auth-context";
 import { SiSlack, SiGmail, SiNotion, SiGoogle } from "react-icons/si";
 import { DashboardLayout } from "~/app/_components/dashboard-layout";
 import { Button } from "~/components/ui/button";
+
+interface SlackWorkspace {
+  id: string;
+  teamId: string;
+  isActive: boolean;
+  teamName: string;
+  installedAt: Date;
+}
+
+interface GmailAccount {
+  [key: string]: any; // Ignoring contents as requested
+}
+
+interface NotionAccount {
+  [key: string]: any; // Ignoring contents as requested
+}
+
+interface BackendUserData {
+  id: string;
+  updatedAt: Date;
+  name: string | null;
+  createdAt: Date;
+  email: string;
+  emailVerified: boolean;
+  slackWorkspaces: SlackWorkspace[];
+  gmailAccounts: GmailAccount[];
+  notionAccounts: NotionAccount[];
+}
 
 const connectionServices = [
   {
@@ -36,6 +64,92 @@ const connectionServices = [
 export default function AccountsPage() {
   const { user, loading, refreshBackendToken } = useAuth();
   const [connectingService, setConnectingService] = useState<string | null>(null);
+  const [backendUserData, setBackendUserData] = useState<BackendUserData | null>(null);
+  const [fetchingUserData, setFetchingUserData] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
+  const fetchUserData = async () => {
+    try {
+      setFetchingUserData(true);
+      setFetchError(null);
+
+      // Get the backend access token
+      const backendToken = JSON.parse(localStorage.getItem('dex_backend_token') || '{}').accessToken;
+      if (!backendToken) {
+        throw new Error('No backend access token found. Please sign in again.');
+      }
+
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://dex-backend-main.vercel.app';
+      const response = await fetch(`${backendUrl}/auth/me`, {
+        headers: {
+          'Authorization': `Bearer ${backendToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch user data: ${response.status} ${response.statusText}`);
+      }
+
+      const userData = await response.json();
+      setBackendUserData(userData);
+      console.log('Backend user data:', userData);
+
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      setFetchError(error instanceof Error ? error.message : 'Failed to fetch user data');
+    } finally {
+      setFetchingUserData(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user && !loading) {
+      fetchUserData();
+    }
+  }, [user, loading]);
+
+  const isServiceConnected = (serviceId: string): boolean => {
+    if (!backendUserData) return false;
+    
+    // Check if the respective array has elements
+    switch (serviceId) {
+      case 'slack':
+        return backendUserData.slackWorkspaces.length > 0;
+      case 'gmail':
+        return backendUserData.gmailAccounts.length > 0;
+      case 'notion':
+        return backendUserData.notionAccounts.length > 0;
+      default:
+        return false;
+    }
+  };
+
+  const getConnectedAccountInfo = (serviceId: string) => {
+    if (!backendUserData) return null;
+    
+    switch (serviceId) {
+      case 'slack':
+        const slack = backendUserData.slackWorkspaces[0];
+        return slack ? {
+          name: slack.teamName,
+          connectedAt: slack.installedAt,
+          count: backendUserData.slackWorkspaces.length
+        } : null;
+      case 'gmail':
+        return backendUserData.gmailAccounts.length > 0 ? {
+          count: backendUserData.gmailAccounts.length,
+          connectedAt: null
+        } : null;
+      case 'notion':
+        return backendUserData.notionAccounts.length > 0 ? {
+          count: backendUserData.notionAccounts.length,
+          connectedAt: null
+        } : null;
+      default:
+        return null;
+    }
+  };
 
   const handleConnect = async (service: typeof connectionServices[0]) => {
     if (!user) return;
@@ -109,6 +223,24 @@ export default function AccountsPage() {
           </p>
         </div>
 
+        {/* Error Message */}
+        {fetchError && (
+          <div className="glass-surface rounded-xl p-6 border border-red-200 bg-red-50/50 mb-6">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-red-500">⚠️</span>
+              <h3 className="text-body font-medium text-red-700">Error Loading Account Data</h3>
+            </div>
+            <p className="text-caption text-red-600 mb-3">{fetchError}</p>
+            <Button 
+              onClick={fetchUserData} 
+              disabled={fetchingUserData}
+              className="bg-red-100 hover:bg-red-200 text-red-700 border border-red-200"
+            >
+              {fetchingUserData ? 'Retrying...' : 'Retry'}
+            </Button>
+          </div>
+        )}
+
         {/* Connected Google Account */}
         <div className="glass-surface rounded-xl p-6 border border-white/20 mb-6">
           <h2 className="text-title font-medium text-deep-gray mb-4">
@@ -124,10 +256,10 @@ export default function AccountsPage() {
                   Google Account
                 </h3>
                 <p className="text-caption text-slate-gray">
-                  {user.email}
+                  {backendUserData?.email || user.email}
                 </p>
                 <p className="text-caption text-slate-gray">
-                  {user.name}
+                  {backendUserData?.name || user.name}
                 </p>
                 {/* Debug info */}
                 <p className="text-xs text-gray-500 mt-1">
@@ -152,46 +284,83 @@ export default function AccountsPage() {
 
         {/* Connection Services */}
         <div className="glass-surface rounded-xl p-6 border border-white/20">
-          <h2 className="text-title font-medium text-deep-gray mb-6">
-            Available Connections
-          </h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-title font-medium text-deep-gray">
+              Available Connections
+            </h2>
+            {fetchingUserData && (
+              <div className="flex items-center gap-2 text-slate-gray">
+                <div className="w-4 h-4 border-2 border-slate-gray border-t-transparent rounded-full animate-spin" />
+                <span className="text-caption">Loading...</span>
+              </div>
+            )}
+          </div>
           
           <div className="space-y-4">
-            {connectionServices.map((service) => (
-              <div
-                key={service.id}
-                className="flex items-center justify-between p-4 bg-white/40 backdrop-blur-sm border border-white/10 rounded-lg hover:bg-white/60 transition-all"
-              >
-                <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 ${service.color} rounded-lg flex items-center justify-center text-white text-xl`}>
-                    {service.icon}
+            {connectionServices.map((service) => {
+              const isConnected = isServiceConnected(service.id);
+              const connectedAccount = getConnectedAccountInfo(service.id);
+              
+              return (
+                <div
+                  key={service.id}
+                  className="flex items-center justify-between p-4 bg-white/40 backdrop-blur-sm border border-white/10 rounded-lg hover:bg-white/60 transition-all"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={`w-12 h-12 ${service.color} rounded-lg flex items-center justify-center text-white text-xl`}>
+                      {service.icon}
+                    </div>
+                    <div>
+                      <h3 className="text-body font-medium text-deep-gray">
+                        {service.name}
+                      </h3>
+                      <p className="text-caption text-slate-gray">
+                        {service.description}
+                      </p>
+                                             {isConnected && connectedAccount?.name && (
+                         <p className="text-xs text-success-green mt-1">
+                           Connected: {connectedAccount.name}
+                         </p>
+                       )}
+                       {isConnected && connectedAccount?.count && (
+                         <p className="text-xs text-success-green mt-1">
+                           {connectedAccount.count} account{connectedAccount.count > 1 ? 's' : ''} connected
+                         </p>
+                       )}
+                       {isConnected && connectedAccount?.connectedAt && (
+                         <p className="text-xs text-slate-gray">
+                           Since: {new Date(connectedAccount.connectedAt).toLocaleDateString()}
+                         </p>
+                       )}
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-body font-medium text-deep-gray">
-                      {service.name}
-                    </h3>
-                    <p className="text-caption text-slate-gray">
-                      {service.description}
-                    </p>
+                  
+                  <div className="flex items-center gap-3">
+                    {isConnected ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-success-green rounded-full"></div>
+                        <span className="text-caption text-success-green font-medium">Connected</span>
+                      </div>
+                    ) : (
+                      <Button
+                        onClick={() => handleConnect(service)}
+                        disabled={connectingService === service.id || fetchingUserData}
+                        className="bg-white/80 hover:bg-white/90 text-deep-gray border border-white/20"
+                      >
+                        {connectingService === service.id ? (
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 border-2 border-deep-gray border-t-transparent rounded-full animate-spin" />
+                            Connecting...
+                          </div>
+                        ) : (
+                          "Connect"
+                        )}
+                      </Button>
+                    )}
                   </div>
                 </div>
-                
-                <Button
-                  onClick={() => handleConnect(service)}
-                  disabled={connectingService === service.id}
-                  className="bg-white/80 hover:bg-white/90 text-deep-gray border border-white/20"
-                >
-                  {connectingService === service.id ? (
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-deep-gray border-t-transparent rounded-full animate-spin" />
-                      Connecting...
-                    </div>
-                  ) : (
-                    "Connect"
-                  )}
-                </Button>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Help Text */}
@@ -204,6 +373,18 @@ export default function AccountsPage() {
               authorization page where you can grant the necessary permissions.
             </p>
           </div>
+
+          {/* Debug Info */}
+          {backendUserData && (
+            <div className="mt-4 p-3 bg-gray-100/50 border border-gray-200 rounded-lg">
+              <details>
+                <summary className="text-xs text-gray-600 cursor-pointer">Debug: Backend User Data</summary>
+                <pre className="text-xs text-gray-500 mt-2 overflow-auto">
+                  {JSON.stringify(backendUserData, null, 2)}
+                </pre>
+              </details>
+            </div>
+          )}
         </div>
       </div>
     </DashboardLayout>

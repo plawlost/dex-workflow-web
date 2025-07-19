@@ -29,7 +29,7 @@ export function NotionProvider<P extends NotionProfile>(
     token: "https://api.notion.com/v1/oauth/token",
     userinfo: {
       url: "https://api.notion.com/v1/users/me",
-      async request({ tokens }) {
+      async request({ tokens }: { tokens: any }) {
         const response = await fetch("https://api.notion.com/v1/users/me", {
           headers: {
             Authorization: `Bearer ${tokens.access_token}`,
@@ -49,11 +49,8 @@ export function NotionProvider<P extends NotionProfile>(
     },
     style: {
       logo: "/notion-logo.svg",
-      logoDark: "/notion-logo.svg",
       bg: "#fff",
-      text: "#000",
-      bgDark: "#000",
-      textDark: "#fff"
+      text: "#000"
     },
     options
   };

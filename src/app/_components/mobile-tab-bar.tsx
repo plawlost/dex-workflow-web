@@ -12,7 +12,6 @@ import {
   RulesIcon, 
   SettingsIcon, 
   HelpIcon,
-  DexLogo 
 } from "~/components/icons";
 
 interface NavItem {
