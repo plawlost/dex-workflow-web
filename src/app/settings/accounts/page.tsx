@@ -91,7 +91,8 @@ export default function AccountsPage() {
         throw new Error(`Failed to fetch user data: ${response.status} ${response.statusText}`);
       }
 
-      const userData = await response.json();
+      const responseData = await response.json();
+      const userData = responseData.user || responseData;
       setBackendUserData(userData);
       console.log('Backend user data:', userData);
 
