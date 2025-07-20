@@ -64,6 +64,7 @@ const connectionServices = [
 export default function AccountsPage() {
   const { user, loading, refreshBackendToken } = useAuth();
   const [connectingService, setConnectingService] = useState<string | null>(null);
+  const [disconnectingService, setDisconnectingService] = useState<string | null>(null);
   const [backendUserData, setBackendUserData] = useState<BackendUserData | null>(null);
   const [fetchingUserData, setFetchingUserData] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -155,9 +156,11 @@ export default function AccountsPage() {
   const handleConnect = async (service: typeof connectionServices[0]) => {
     if (!user) return;
     
+    const isReconnecting = isServiceConnected(service.id);
     setConnectingService(service.id);
+    
     try {
-      // Get the backend access token (not Supabase token)
+      // Get the backend access token
       const backendToken = JSON.parse(localStorage.getItem('dex_backend_token') || '{}').accessToken;
       if (!backendToken) {
         throw new Error('No backend access token found. Please sign in again.');
@@ -175,21 +178,80 @@ export default function AccountsPage() {
         throw new Error(`Unknown service: ${service.id}`);
       }
 
-      // Make request to your backend with backend token as query param
+      // Create a form to POST with Authorization header (for OAuth redirect)
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://dex-backend-main.vercel.app';
-      const authUrl = `${backendUrl}${endpoint}?token=${backendToken}`;
+      const authUrl = `${backendUrl}${endpoint}`;
       
-      console.log(`Connecting to ${service.name} via:`, authUrl);
+      console.log(`${isReconnecting ? 'Reconnecting to' : 'Connecting to'} ${service.name} via:`, authUrl);
       
-      // Redirect to the OAuth flow
-      window.location.href = authUrl;
+      // For OAuth flows, we still need to redirect with token in URL since we can't set headers on redirects
+      // The backend engineer can update this if they prefer a different approach for OAuth flows
+      window.location.href = `${authUrl}?token=${backendToken}`;
       
     } catch (error) {
-      console.error(`Failed to connect ${service.name}:`, error);
-      alert(`Failed to connect ${service.name}. Please try again.`);
+      console.error(`Failed to ${isReconnecting ? 'reconnect' : 'connect'} ${service.name}:`, error);
+      alert(`Failed to ${isReconnecting ? 'reconnect' : 'connect'} ${service.name}. Please try again.`);
       setConnectingService(null);
     }
     // Note: Don't set connectingService to null here since we're redirecting
+  };
+
+  const handleDisconnect = async (service: typeof connectionServices[0]) => {
+    if (!user) return;
+    
+    // Confirm before disconnecting
+    const confirmed = window.confirm(`Are you sure you want to disconnect ${service.name}? This will remove all connected accounts for this service.`);
+    if (!confirmed) return;
+    
+    setDisconnectingService(service.id);
+    
+    try {
+      // Get the backend access token
+      const backendToken = JSON.parse(localStorage.getItem('dex_backend_token') || '{}').accessToken;
+      if (!backendToken) {
+        throw new Error('No backend access token found. Please sign in again.');
+      }
+
+      // Map service IDs to remove endpoints
+      const removeEndpointMap = {
+        slack: '/auth/slack/remove',
+        gmail: '/auth/gmail/remove',
+        notion: '/auth/notion/remove'
+      };
+
+      const endpoint = removeEndpointMap[service.id as keyof typeof removeEndpointMap];
+      if (!endpoint) {
+        throw new Error(`Unknown service: ${service.id}`);
+      }
+
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://dex-backend-main.vercel.app';
+      
+      console.log(`Disconnecting ${service.name}...`);
+      
+      const response = await fetch(`${backendUrl}${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${backendToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}) // Remove all accounts for this service
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to disconnect: ${response.status} ${response.statusText}`);
+      }
+
+      console.log(`Successfully disconnected ${service.name}`);
+      
+      // Refresh user data to reflect the changes
+      await fetchUserData();
+      
+    } catch (error) {
+      console.error(`Failed to disconnect ${service.name}:`, error);
+      alert(`Failed to disconnect ${service.name}. Please try again.`);
+    } finally {
+      setDisconnectingService(null);
+    }
   };
 
   if (loading) {
@@ -338,9 +400,45 @@ export default function AccountsPage() {
                   
                   <div className="flex items-center gap-3">
                     {isConnected ? (
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-success-green rounded-full"></div>
-                        <span className="text-caption text-success-green font-medium">Connected</span>
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-success-green rounded-full"></div>
+                          <span className="text-caption text-success-green font-medium">Connected</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            onClick={() => handleConnect(service)}
+                            disabled={connectingService === service.id || disconnectingService === service.id || fetchingUserData}
+                            variant="outline"
+                            size="sm"
+                            className="bg-white/60 hover:bg-white/80 text-deep-gray border border-white/30 text-xs px-3 py-1 h-8"
+                          >
+                            {connectingService === service.id ? (
+                              <div className="flex items-center gap-1">
+                                <div className="w-3 h-3 border-2 border-deep-gray border-t-transparent rounded-full animate-spin" />
+                                Reconnecting...
+                              </div>
+                            ) : (
+                              "Reconnect"
+                            )}
+                          </Button>
+                          <Button
+                            onClick={() => handleDisconnect(service)}
+                            disabled={connectingService === service.id || disconnectingService === service.id || fetchingUserData}
+                            variant="outline"
+                            size="sm"
+                            className="bg-red-50/80 hover:bg-red-100/80 text-red-600 border border-red-200/50 text-xs px-3 py-1 h-8"
+                          >
+                            {disconnectingService === service.id ? (
+                              <div className="flex items-center gap-1">
+                                <div className="w-3 h-3 border-2 border-red-600 border-t-transparent rounded-full animate-spin" />
+                                Disconnecting...
+                              </div>
+                            ) : (
+                              "Disconnect"
+                            )}
+                          </Button>
+                        </div>
                       </div>
                     ) : (
                       <Button
@@ -369,10 +467,11 @@ export default function AccountsPage() {
             <h4 className="text-body font-medium text-deep-gray mb-2">
               How it works
             </h4>
-            <p className="text-caption text-slate-gray">
-              Click "Connect" to authorize Dex to access your accounts. You'll be redirected to the service's 
-              authorization page where you can grant the necessary permissions.
-            </p>
+            <ul className="text-caption text-slate-gray space-y-1">
+              <li>• <strong>Connect:</strong> Authorize Dex to access your accounts via OAuth</li>
+              <li>• <strong>Reconnect:</strong> Update permissions or switch to a different account</li>
+              <li>• <strong>Disconnect:</strong> Remove all connected accounts for a service</li>
+            </ul>
           </div>
 
           {/* Debug Info */}

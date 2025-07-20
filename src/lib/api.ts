@@ -78,20 +78,51 @@ class BackendAPI {
     });
   }
 
-  // Connection endpoints - these redirect directly
+  // Connection endpoints - these redirect directly (OAuth flows still need token in URL)
   async getSlackConnection(accessToken: string): Promise<void> {
     const url = `${this.baseUrl}/auth/slack?token=${encodeURIComponent(accessToken)}`;
-    window.open(url, '_blank', 'width=600,height=600');
+    window.location.href = url;
   }
 
   async getGmailConnection(accessToken: string): Promise<void> {
     const url = `${this.baseUrl}/auth/gmail/connect?token=${encodeURIComponent(accessToken)}`;
-    window.open(url, '_blank', 'width=600,height=600');
+    window.location.href = url;
   }
 
   async getNotionConnection(accessToken: string): Promise<void> {
     const url = `${this.baseUrl}/auth/notion?token=${encodeURIComponent(accessToken)}`;
-    window.open(url, '_blank', 'width=600,height=600');
+    window.location.href = url;
+  }
+
+  // Disconnect endpoints - these use Authorization headers
+  async disconnectSlack(accessToken: string, workspaceId?: string): Promise<void> {
+    return this.request("/auth/slack/remove", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(workspaceId ? { workspaceId } : {}),
+    });
+  }
+
+  async disconnectGmail(accessToken: string): Promise<void> {
+    return this.request("/auth/gmail/remove", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({}),
+    });
+  }
+
+  async disconnectNotion(accessToken: string, workspaceId?: string): Promise<void> {
+    return this.request("/auth/notion/remove", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(workspaceId ? { workspaceId } : {}),
+    });
   }
 }
 
