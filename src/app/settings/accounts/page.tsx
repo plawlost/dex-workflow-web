@@ -181,39 +181,18 @@ export default function AccountsPage() {
 
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://dex-backend-main.vercel.app';
       
-      console.log(`${isReconnecting ? 'Reconnecting to' : 'Connecting to'} ${service.name}...`);
+      console.log(`${isReconnecting ? 'Reconnecting to' : 'Connecting to'} ${service.name} via redirect...`);
       
-      // Use Authorization header as requested by backend engineer
-      const response = await fetch(`${backendUrl}${endpoint}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${backendToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to initiate OAuth: ${response.status} ${response.statusText}`);
-      }
-
-      // Check if response contains redirect URL
-      const responseData = await response.json();
-      if (responseData.authUrl || responseData.redirectUrl) {
-        // Redirect to OAuth URL provided by backend
-        window.location.href = responseData.authUrl || responseData.redirectUrl;
-      } else {
-        // If no redirect URL, assume the response itself indicates success
-        console.log(`Successfully initiated ${service.name} connection`);
-        // Refresh user data to check for updates
-        await fetchUserData();
-        setConnectingService(null);
-      }
+      // Direct redirect to OAuth endpoint with token
+      // OAuth flows require browser redirects, can't use fetch with custom headers
+      window.location.href = `${backendUrl}${endpoint}?token=${encodeURIComponent(backendToken)}`;
       
     } catch (error) {
       console.error(`Failed to ${isReconnecting ? 'reconnect' : 'connect'} ${service.name}:`, error);
       alert(`Failed to ${isReconnecting ? 'reconnect' : 'connect'} ${service.name}. Please try again.`);
       setConnectingService(null);
     }
+    // Note: Don't set connectingService to null here since we're redirecting
   };
 
   const handleDisconnectSpecific = async (serviceId: string, workspaceId?: string) => {
@@ -253,15 +232,19 @@ export default function AccountsPage() {
         body: JSON.stringify(workspaceId ? { workspaceId } : {})
       });
 
-      if (!response.ok) {
+      // Check for successful response (200-299 range)
+      if (response.ok) {
+        console.log(`Successfully disconnected ${serviceId}${workspaceId ? ` workspace ${workspaceId}` : ' all accounts'}`);
+        
+        // Refresh user data to reflect the changes
+        await fetchUserData();
+        setShowDisconnectModal(null);
+      } else {
+        // Log the response for debugging
+        const errorText = await response.text();
+        console.error(`Disconnect failed with status ${response.status}:`, errorText);
         throw new Error(`Failed to disconnect: ${response.status} ${response.statusText}`);
       }
-
-      console.log(`Successfully disconnected ${serviceId}${workspaceId ? ` workspace ${workspaceId}` : ' all accounts'}`);
-      
-      // Refresh user data to reflect the changes
-      await fetchUserData();
-      setShowDisconnectModal(null);
       
     } catch (error) {
       console.error(`Failed to disconnect ${serviceId}:`, error);
