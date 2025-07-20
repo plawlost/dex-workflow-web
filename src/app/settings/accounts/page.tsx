@@ -75,10 +75,33 @@ export default function AccountsPage() {
       setFetchingUserData(true);
       setFetchError(null);
 
-      // Get the backend access token
-      const backendToken = JSON.parse(localStorage.getItem('dex_backend_token') || '{}').accessToken;
-      if (!backendToken) {
-        throw new Error('No backend access token found. Please sign in again.');
+      // Get the backend access token with better error handling
+      let backendToken;
+      try {
+        const tokenData = localStorage.getItem('dex_backend_token');
+        if (!tokenData) {
+          throw new Error('No token data found');
+        }
+        const parsedToken = JSON.parse(tokenData);
+        backendToken = parsedToken.accessToken;
+        if (!backendToken) {
+          throw new Error('No access token in stored data');
+        }
+      } catch (tokenError) {
+        console.error('Token parsing error:', tokenError);
+        // Try to refresh the backend token
+        if (refreshBackendToken) {
+          await refreshBackendToken();
+          // Retry getting the token after refresh
+          const tokenData = localStorage.getItem('dex_backend_token');
+          if (tokenData) {
+            const parsedToken = JSON.parse(tokenData);
+            backendToken = parsedToken.accessToken;
+          }
+        }
+        if (!backendToken) {
+          throw new Error('No backend access token found. Please sign in again.');
+        }
       }
 
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://dex-backend-main.vercel.app';
@@ -161,9 +184,17 @@ export default function AccountsPage() {
     setConnectingService(service.id);
     
     try {
-      // Get the backend access token
-      const backendToken = JSON.parse(localStorage.getItem('dex_backend_token') || '{}').accessToken;
-      if (!backendToken) {
+      // Get the backend access token with better error handling
+      let backendToken;
+      try {
+        const tokenData = localStorage.getItem('dex_backend_token');
+        const parsedToken = JSON.parse(tokenData || '{}');
+        backendToken = parsedToken.accessToken;
+        if (!backendToken) {
+          throw new Error('No access token found');
+        }
+      } catch (tokenError) {
+        console.error('Token error in connect:', tokenError);
         throw new Error('No backend access token found. Please sign in again.');
       }
 
@@ -201,9 +232,17 @@ export default function AccountsPage() {
     setDisconnectingService(serviceId);
     
     try {
-      // Get the backend access token
-      const backendToken = JSON.parse(localStorage.getItem('dex_backend_token') || '{}').accessToken;
-      if (!backendToken) {
+      // Get the backend access token with better error handling
+      let backendToken;
+      try {
+        const tokenData = localStorage.getItem('dex_backend_token');
+        const parsedToken = JSON.parse(tokenData || '{}');
+        backendToken = parsedToken.accessToken;
+        if (!backendToken) {
+          throw new Error('No access token found');
+        }
+      } catch (tokenError) {
+        console.error('Token error in disconnect:', tokenError);
         throw new Error('No backend access token found. Please sign in again.');
       }
 
