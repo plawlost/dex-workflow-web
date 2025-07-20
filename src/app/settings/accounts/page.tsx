@@ -65,6 +65,7 @@ export default function AccountsPage() {
   const { user, loading, refreshBackendToken } = useAuth();
   const [connectingService, setConnectingService] = useState<string | null>(null);
   const [disconnectingService, setDisconnectingService] = useState<string | null>(null);
+  const [showDisconnectModal, setShowDisconnectModal] = useState<string | null>(null);
   const [backendUserData, setBackendUserData] = useState<BackendUserData | null>(null);
   const [fetchingUserData, setFetchingUserData] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -196,14 +197,10 @@ export default function AccountsPage() {
     // Note: Don't set connectingService to null here since we're redirecting
   };
 
-  const handleDisconnect = async (service: typeof connectionServices[0]) => {
+  const handleDisconnectSpecific = async (serviceId: string, workspaceId?: string) => {
     if (!user) return;
     
-    // Confirm before disconnecting
-    const confirmed = window.confirm(`Are you sure you want to disconnect ${service.name}? This will remove all connected accounts for this service.`);
-    if (!confirmed) return;
-    
-    setDisconnectingService(service.id);
+    setDisconnectingService(serviceId);
     
     try {
       // Get the backend access token
@@ -219,14 +216,14 @@ export default function AccountsPage() {
         notion: '/auth/notion/remove'
       };
 
-      const endpoint = removeEndpointMap[service.id as keyof typeof removeEndpointMap];
+      const endpoint = removeEndpointMap[serviceId as keyof typeof removeEndpointMap];
       if (!endpoint) {
-        throw new Error(`Unknown service: ${service.id}`);
+        throw new Error(`Unknown service: ${serviceId}`);
       }
 
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://dex-backend-main.vercel.app';
       
-      console.log(`Disconnecting ${service.name}...`);
+      console.log(`Disconnecting ${serviceId}${workspaceId ? ` workspace ${workspaceId}` : ' all accounts'}...`);
       
       const response = await fetch(`${backendUrl}${endpoint}`, {
         method: 'POST',
@@ -234,24 +231,148 @@ export default function AccountsPage() {
           'Authorization': `Bearer ${backendToken}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({}) // Remove all accounts for this service
+        body: JSON.stringify(workspaceId ? { workspaceId } : {})
       });
 
       if (!response.ok) {
         throw new Error(`Failed to disconnect: ${response.status} ${response.statusText}`);
       }
 
-      console.log(`Successfully disconnected ${service.name}`);
+      console.log(`Successfully disconnected ${serviceId}${workspaceId ? ` workspace ${workspaceId}` : ' all accounts'}`);
       
       // Refresh user data to reflect the changes
       await fetchUserData();
+      setShowDisconnectModal(null);
       
     } catch (error) {
-      console.error(`Failed to disconnect ${service.name}:`, error);
-      alert(`Failed to disconnect ${service.name}. Please try again.`);
+      console.error(`Failed to disconnect ${serviceId}:`, error);
+      alert(`Failed to disconnect ${serviceId}. Please try again.`);
     } finally {
       setDisconnectingService(null);
     }
+  };
+
+  const renderDisconnectModal = () => {
+    if (!showDisconnectModal || !backendUserData) return null;
+
+    const service = connectionServices.find(s => s.id === showDisconnectModal);
+    if (!service) return null;
+
+    let accounts: any[] = [];
+    let accountType = '';
+
+    switch (showDisconnectModal) {
+      case 'slack':
+        accounts = backendUserData.slackWorkspaces;
+        accountType = 'workspace';
+        break;
+      case 'gmail':
+        accounts = backendUserData.gmailAccounts;
+        accountType = 'account';
+        break;
+      case 'notion':
+        accounts = backendUserData.notionAccounts;
+        accountType = 'workspace';
+        break;
+    }
+
+    return (
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="glass-surface rounded-xl p-6 border border-white/20 max-w-md w-full mx-4">
+          <div className="flex items-center gap-3 mb-4">
+            <div className={`w-10 h-10 ${service.color} rounded-lg flex items-center justify-center text-white`}>
+              {service.icon}
+            </div>
+            <div>
+              <h3 className="text-title font-medium text-deep-gray">
+                Disconnect {service.name}
+              </h3>
+              <p className="text-caption text-slate-gray">
+                Choose which {accountType}s to disconnect
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-3 mb-6">
+            {accounts.map((account, index) => (
+              <div key={index} className="flex items-center justify-between p-3 bg-white/40 rounded-lg border border-white/10">
+                <div>
+                  <p className="text-body font-medium text-deep-gray">
+                    {showDisconnectModal === 'slack' ? account.teamName : 
+                     showDisconnectModal === 'gmail' ? `Gmail Account ${index + 1}` :
+                     `Notion Workspace ${index + 1}`}
+                  </p>
+                  {showDisconnectModal === 'slack' && (
+                    <p className="text-caption text-slate-gray">
+                      Team ID: {account.teamId}
+                    </p>
+                  )}
+                </div>
+                <Button
+                  onClick={() => handleDisconnectSpecific(showDisconnectModal, 
+                    showDisconnectModal === 'slack' ? account.teamId :
+                    showDisconnectModal === 'notion' ? account.id : undefined
+                  )}
+                  disabled={disconnectingService === showDisconnectModal}
+                  variant="outline"
+                  size="sm"
+                  className="bg-red-50/80 hover:bg-red-100/80 text-red-600 border border-red-200/50 text-xs px-3 py-1 h-8"
+                >
+                  {disconnectingService === showDisconnectModal ? (
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-3 border-2 border-red-600 border-t-transparent rounded-full animate-spin" />
+                      Removing...
+                    </div>
+                  ) : (
+                    "Remove"
+                  )}
+                </Button>
+              </div>
+            ))}
+
+            {/* Disconnect All Option */}
+            <div className="border-t border-white/10 pt-3">
+              <div className="flex items-center justify-between p-3 bg-red-50/40 rounded-lg border border-red-200/30">
+                <div>
+                  <p className="text-body font-medium text-red-700">
+                    Disconnect All {service.name} {accountType}s
+                  </p>
+                  <p className="text-caption text-red-600">
+                    This will remove all connected {accountType}s
+                  </p>
+                </div>
+                <Button
+                  onClick={() => handleDisconnectSpecific(showDisconnectModal)}
+                  disabled={disconnectingService === showDisconnectModal}
+                  variant="outline"
+                  size="sm"
+                  className="bg-red-100/80 hover:bg-red-200/80 text-red-700 border border-red-300/50 text-xs px-3 py-1 h-8"
+                >
+                  {disconnectingService === showDisconnectModal ? (
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-3 border-2 border-red-700 border-t-transparent rounded-full animate-spin" />
+                      Disconnecting...
+                    </div>
+                  ) : (
+                    "Disconnect All"
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <Button
+              onClick={() => setShowDisconnectModal(null)}
+              variant="outline"
+              className="flex-1 bg-white/60 hover:bg-white/80 text-deep-gray border border-white/30"
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   if (loading) {
@@ -423,20 +544,13 @@ export default function AccountsPage() {
                             )}
                           </Button>
                           <Button
-                            onClick={() => handleDisconnect(service)}
+                            onClick={() => setShowDisconnectModal(service.id)}
                             disabled={connectingService === service.id || disconnectingService === service.id || fetchingUserData}
                             variant="outline"
                             size="sm"
                             className="bg-red-50/80 hover:bg-red-100/80 text-red-600 border border-red-200/50 text-xs px-3 py-1 h-8"
                           >
-                            {disconnectingService === service.id ? (
-                              <div className="flex items-center gap-1">
-                                <div className="w-3 h-3 border-2 border-red-600 border-t-transparent rounded-full animate-spin" />
-                                Disconnecting...
-                              </div>
-                            ) : (
-                              "Disconnect"
-                            )}
+                            Disconnect
                           </Button>
                         </div>
                       </div>
@@ -486,6 +600,9 @@ export default function AccountsPage() {
             </div>
           )}
         </div>
+
+        {/* Disconnect Modal */}
+        {renderDisconnectModal()}
       </div>
     </DashboardLayout>
   );
