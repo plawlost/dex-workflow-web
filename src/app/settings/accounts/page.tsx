@@ -179,22 +179,41 @@ export default function AccountsPage() {
         throw new Error(`Unknown service: ${service.id}`);
       }
 
-      // Create a form to POST with Authorization header (for OAuth redirect)
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://dex-backend-main.vercel.app';
-      const authUrl = `${backendUrl}${endpoint}`;
       
-      console.log(`${isReconnecting ? 'Reconnecting to' : 'Connecting to'} ${service.name} via:`, authUrl);
+      console.log(`${isReconnecting ? 'Reconnecting to' : 'Connecting to'} ${service.name}...`);
       
-      // For OAuth flows, we still need to redirect with token in URL since we can't set headers on redirects
-      // The backend engineer can update this if they prefer a different approach for OAuth flows
-      window.location.href = `${authUrl}?token=${backendToken}`;
+      // Use Authorization header as requested by backend engineer
+      const response = await fetch(`${backendUrl}${endpoint}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${backendToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to initiate OAuth: ${response.status} ${response.statusText}`);
+      }
+
+      // Check if response contains redirect URL
+      const responseData = await response.json();
+      if (responseData.authUrl || responseData.redirectUrl) {
+        // Redirect to OAuth URL provided by backend
+        window.location.href = responseData.authUrl || responseData.redirectUrl;
+      } else {
+        // If no redirect URL, assume the response itself indicates success
+        console.log(`Successfully initiated ${service.name} connection`);
+        // Refresh user data to check for updates
+        await fetchUserData();
+        setConnectingService(null);
+      }
       
     } catch (error) {
       console.error(`Failed to ${isReconnecting ? 'reconnect' : 'connect'} ${service.name}:`, error);
       alert(`Failed to ${isReconnecting ? 'reconnect' : 'connect'} ${service.name}. Please try again.`);
       setConnectingService(null);
     }
-    // Note: Don't set connectingService to null here since we're redirecting
   };
 
   const handleDisconnectSpecific = async (serviceId: string, workspaceId?: string) => {

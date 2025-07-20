@@ -78,20 +78,29 @@ class BackendAPI {
     });
   }
 
-  // Connection endpoints - these redirect directly (OAuth flows still need token in URL)
-  async getSlackConnection(accessToken: string): Promise<void> {
-    const url = `${this.baseUrl}/auth/slack?token=${encodeURIComponent(accessToken)}`;
-    window.location.href = url;
+  // Connection endpoints - these now use Authorization headers
+  async getSlackConnection(accessToken: string): Promise<{ authUrl?: string }> {
+    return this.request("/auth/slack", {
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+      },
+    });
   }
 
-  async getGmailConnection(accessToken: string): Promise<void> {
-    const url = `${this.baseUrl}/auth/gmail/connect?token=${encodeURIComponent(accessToken)}`;
-    window.location.href = url;
+  async getGmailConnection(accessToken: string): Promise<{ authUrl?: string }> {
+    return this.request("/auth/gmail/connect", {
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+      },
+    });
   }
 
-  async getNotionConnection(accessToken: string): Promise<void> {
-    const url = `${this.baseUrl}/auth/notion?token=${encodeURIComponent(accessToken)}`;
-    window.location.href = url;
+  async getNotionConnection(accessToken: string): Promise<{ authUrl?: string }> {
+    return this.request("/auth/notion", {
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+      },
+    });
   }
 
   // Disconnect endpoints - these use Authorization headers
