@@ -9,6 +9,7 @@ export interface AuthUser {
   name: string | null;
   avatar_url: string | null;
   backendToken?: string | null;
+  backendEmail?: string | null;
 }
 
 interface AuthContextType {
@@ -53,13 +54,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const unsubscribe = SupabaseAuthService.onAuthStateChange(async (supabaseUser: SupabaseUser | null) => {
       if (supabaseUser) {
         // User signed in, normalize user data
-        const backendToken = getBackendToken();
+        const unparsedBackendToken = getBackendToken();
+        const backendToken = unparsedBackendToken ? JSON.parse(unparsedBackendToken).accessToken : null;
+        const backendEmail = unparsedBackendToken ? JSON.parse(unparsedBackendToken).email : null;
+
         const authUser: AuthUser = {
           id: supabaseUser.id,
           email: supabaseUser.email || '',
           name: supabaseUser.user_metadata.full_name || supabaseUser.user_metadata.name || null,
           avatar_url: supabaseUser.user_metadata.avatar_url || supabaseUser.user_metadata.picture || null,
           backendToken,
+          backendEmail: backendEmail ? backendEmail : null,
         };
         setUser(authUser);
       } else {
@@ -78,15 +83,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const supabaseUser = await SupabaseAuthService.getCurrentUser();
       if (supabaseUser) {
         const unparsedBackendToken = getBackendToken();
-        const backendToken = unparsedBackendToken ? JSON.parse(unparsedBackendToken) : null;
+        const backendToken = unparsedBackendToken ? JSON.parse(unparsedBackendToken).accessToken : null;
+        const backendEmail = unparsedBackendToken ? JSON.parse(unparsedBackendToken).email : null;
 
-        console.log('Backend token:', backendToken);
         const authUser: AuthUser = {
           id: supabaseUser.id,
           email: supabaseUser.email || '',
           name: supabaseUser.user_metadata.full_name || supabaseUser.user_metadata.name || null,
           avatar_url: supabaseUser.user_metadata.avatar_url || supabaseUser.user_metadata.picture || null,
           backendToken: backendToken ? backendToken.accessToken : null,
+          backendEmail: backendEmail ? backendEmail : null,
         };
         setUser(authUser);
       } else {

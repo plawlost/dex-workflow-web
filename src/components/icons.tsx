@@ -489,4 +489,136 @@ export function RefreshIcon({ size = 20, className, ...props }: IconProps) {
       <rect x="4" y="10" width="2" height="4" rx="1" fill="currentColor" />
     </svg>
   );
+}
+
+// Dashboard Stats Icons
+export function ChartIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <rect x="3" y="13" width="3" height="5" rx="1" fill="currentColor" />
+      <rect x="7" y="9" width="3" height="9" rx="1" fill="currentColor" />
+      <rect x="11" y="6" width="3" height="12" rx="1" fill="currentColor" />
+      <rect x="15" y="3" width="3" height="15" rx="1" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function ConversationIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <rect x="2" y="4" width="12" height="8" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
+      <path d="M6 12L8 14L6 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <rect x="10" y="8" width="8" height="8" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
+    </svg>
+  );
+}
+
+export function UsersIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <circle cx="7" cy="6" r="3" fill="currentColor" />
+      <circle cx="13" cy="6" r="3" fill="currentColor" />
+      <path d="M1 17C1 14.2386 3.23858 12 6 12H8C10.7614 12 13 14.2386 13 17" 
+            stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <path d="M7 17C7 14.2386 9.23858 12 12 12H14C16.7614 12 19 14.2386 19 17" 
+            stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
+    </svg>
+  );
+}
+
+export function DocumentIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <rect x="4" y="2" width="12" height="16" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
+      <rect x="7" y="6" width="6" height="2" rx="1" fill="currentColor" />
+      <rect x="7" y="9" width="6" height="2" rx="1" fill="currentColor" />
+      <rect x="7" y="12" width="4" height="2" rx="1" fill="currentColor" />
+    </svg>
+  );
+}
+
+// Platform Icons
+export function SlackIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <rect x="2" y="8" width="4" height="4" rx="2" fill="currentColor" />
+      <rect x="14" y="8" width="4" height="4" rx="2" fill="currentColor" />
+      <rect x="8" y="2" width="4" height="4" rx="2" fill="currentColor" />
+      <rect x="8" y="14" width="4" height="4" rx="2" fill="currentColor" />
+      <rect x="6" y="8" width="8" height="4" rx="2" fill="currentColor" />
+      <rect x="8" y="6" width="4" height="8" rx="2" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function GmailIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <rect x="2" y="5" width="16" height="11" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
+      <path d="M2 6L10 12L18 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d="M2 16L7 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <path d="M18 16L13 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
+    </svg>
+  );
+}
+
+export function NotionIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <rect x="3" y="2" width="14" height="16" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
+      <rect x="6" y="5" width="8" height="2" rx="1" fill="currentColor" />
+      <rect x="6" y="8" width="6" height="2" rx="1" fill="currentColor" />
+      <rect x="6" y="11" width="8" height="2" rx="1" fill="currentColor" />
+      <rect x="6" y="14" width="4" height="2" rx="1" fill="currentColor" />
+    </svg>
+  );
 } 

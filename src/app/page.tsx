@@ -2,7 +2,7 @@
 
 import { useAuth } from "~/contexts/auth-context";
 import { DashboardLayout } from "./_components/dashboard-layout";
-import { TimelineView } from "./_components/timeline-view";
+import { DashboardOverview } from "./_components/dashboard-overview";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 
@@ -60,7 +60,7 @@ export default function HomePage() {
 
   return (
     <DashboardLayout>
-      <TimelineView />
+      <DashboardOverview />
     </DashboardLayout>
   );
 }

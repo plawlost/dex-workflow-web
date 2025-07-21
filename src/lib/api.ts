@@ -142,6 +142,101 @@ class BackendAPI {
       },
     });
   }
+
+  // Dashboard overview endpoint
+  async getDashboardOverview(accessToken: string): Promise<DashboardOverviewResponse> {
+    return this.request("/api/dashboard/overview", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+      },
+    });
+  }
+
+  // Push contacts to CRM (Notion)
+  async pushContactsToCRM(accessToken: string, email: string): Promise<{ success: boolean; message?: string }> {
+    return this.request("/api/notion/webhook/push-contacts", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+  }
 }
 
 export const backendAPI = new BackendAPI();
+
+export interface DashboardOverviewResponse {
+  success: boolean;
+  data: {
+    connectedPlatforms: {
+      slack: Array<{
+        id: string;
+        teamName: string;
+        installedAt: string;
+      }>;
+      gmail: Array<{
+        id: string;
+        email: string;
+        connectedAt: string;
+      }>;
+      notion: Array<{
+        id: string;
+        workspaceName: string;
+        connectedAt: string;
+      }>;
+    };
+    stats: {
+      totalSources: number;
+      totalConversations: number;
+      totalContacts: number;
+      recentConversations: number;
+      newContacts: number;
+      pendingSummaries: number;
+      totalSummaries: number;
+    };
+    sources: Array<{
+      id: string;
+      platform: "SLACK" | "GMAIL";
+      sourceIdentifier: string;
+      conversationCount: number;
+      contactCount: number;
+      isActive: boolean;
+    }>;
+    summaries: Array<{
+      id: string;
+      title: string;
+      summary: string;
+      type: "CHANNEL" | "GROUP_DM" | "DM";
+      platform: "SLACK" | "GMAIL";
+      startedAt: string;
+      lastActivityAt: string;
+      duration: number;
+      isRecent: boolean;
+      messageCount: number;
+      participants: Array<{
+        name: string;
+        email: string;
+        avatar?: string;
+      }>;
+      platformDetails: {
+        channelName?: string;
+        workspaceName?: string;
+        channelType?: string;
+        subject?: string;
+        threadId?: string;
+        labels?: string[];
+        account?: string;
+      };
+      analysis: {
+        keyTopics: string[];
+        actionItems: string[];
+        hasActionItems: boolean;
+        hasFollowUp: boolean;
+        needsAttention: boolean;
+      };
+    }>;
+  };
+}

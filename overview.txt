@@ -1,0 +1,624 @@
+Request endpoint: https://dex-backend-64zpuq.fly.dev/api/dashboard/overview
+POST method with accesstoken in auth header
+
+Response format:
+{
+    "success": true,
+    "data": {
+        "connectedPlatforms": {
+            "slack": [
+                {
+                    "id": "cmdadoddd0002jq047v9u7r7o",
+                    "teamName": "PlawLabs",
+                    "installedAt": "2025-07-19T15:03:34.321Z"
+                }
+            ],
+            "gmail": [
+                {
+                    "id": "cmdadozvu0006jq04a9zxf9fj",
+                    "email": "anirudh26p@gmail.com",
+                    "connectedAt": "2025-07-19T15:04:03.499Z"
+                }
+            ]
+        },
+        "stats": {
+            "totalSources": 4,
+            "totalConversations": 24,
+            "totalContacts": 4,
+            "recentConversations": 8,
+            "newContacts": 1,
+            "pendingSummaries": 0,
+            "totalSummaries": 8
+        },
+        "sources": [
+            {
+                "id": "cmdbfdgsk0001xjtqarpp1s4v",
+                "platform": "SLACK",
+                "sourceIdentifier": "D095XAPJTFT",
+                "conversationCount": 7,
+                "contactCount": 1,
+                "isActive": true
+            },
+            {
+                "id": "cmdc31g00000fsijf64e5n5vw",
+                "platform": "SLACK",
+                "sourceIdentifier": "C09360VQC2U",
+                "conversationCount": 2,
+                "contactCount": 1,
+                "isActive": true
+            },
+            {
+                "id": "cmdbexczo0001xjhnz6nsna3q",
+                "platform": "SLACK",
+                "sourceIdentifier": "C0923AW50MV",
+                "conversationCount": 14,
+                "contactCount": 2,
+                "isActive": true
+            },
+            {
+                "id": "cmdc35idm000ysijfievl8a4s",
+                "platform": "GMAIL",
+                "sourceIdentifier": "google-meet",
+                "conversationCount": 1,
+                "contactCount": 0,
+                "isActive": true
+            }
+        ],
+        "summaries": [
+            {
+                "id": "cmdc35ira0010sijfgu5rx2ys",
+                "title": "Google Meet Summary",
+                "summary": "This is a test of the workflow for actionable messages and meet transcripts. The participants were Test2 and Yaz.",
+                "type": "GROUP_DM",
+                "platform": "GMAIL",
+                "startedAt": "2025-07-20T19:44:31.029Z",
+                "lastActivityAt": "2025-07-20T19:44:31.029Z",
+                "duration": 0,
+                "isRecent": true,
+                "messageCount": 0,
+                "recentMessages": [],
+                "participants": [],
+                "platformDetails": {
+                    "subject": "Google Meet Summary",
+                    "threadId": "google-meet",
+                    "labels": [],
+                    "account": "Unknown Account"
+                },
+                "source": {
+                    "platform": "GMAIL",
+                    "identifier": "google-meet",
+                    "metadata": {
+                        "type": "google_meet",
+                        "description": "Google Meet conversations and summaries"
+                    }
+                },
+                "analysis": {
+                    "keyTopics": [],
+                    "actionItems": [],
+                    "hasActionItems": false,
+                    "hasFollowUp": false,
+                    "needsAttention": false
+                },
+                "summaryMetadata": {
+                    "hasKeyPoints": false,
+                    "hasNextSteps": false,
+                    "participantCount": 0,
+                    "highValueParticipants": 0,
+                    "lastSummarizedAt": null,
+                    "summaryVersion": 0
+                }
+            },
+            {
+                "id": "cmdc34zmu000ssijfgo3ult5s",
+                "title": "#agent",
+                "summary": "I've processed your request from the #agent channel. Here's a summary of your meeting with Yaz: The purpose was to test the workflow for handling actionable messages and meet transcripts. The summary has been stored, and an action item has been created for you.",
+                "type": "CHANNEL",
+                "platform": "SLACK",
+                "startedAt": "2025-07-20T19:44:06.245Z",
+                "lastActivityAt": "2025-07-20T19:44:09.193Z",
+                "duration": 0,
+                "isRecent": true,
+                "messageCount": 1,
+                "recentMessages": [
+                    {
+                        "id": "cmdc3500j000usijfkcv0jgh9",
+                        "text": "<@U094T8SDC8Z> consider this text a actionable message and a meet transcript from my todays meet with yaz\n\nthe participants of the meet were me and yaz.",
+                        "sentAt": "2025-07-20T19:43:59.005Z",
+                        "sender": {
+                            "name": "Test2",
+                            "email": "ani8866607609@gmail.com",
+                            "avatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                            "platformData": {
+                                "slackEmail": "ani8866607609@gmail.com",
+                                "slackAvatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                                "slackUserId": "U095XAPGR6D",
+                                "slackUsername": "ani8866607609",
+                                "slackDisplayName": "Test2"
+                            }
+                        }
+                    }
+                ],
+                "participants": [
+                    {
+                        "name": "Test2",
+                        "email": "ani8866607609@gmail.com",
+                        "avatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                        "platformData": {
+                            "slackEmail": "ani8866607609@gmail.com",
+                            "slackAvatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                            "slackUserId": "U095XAPGR6D",
+                            "slackUsername": "ani8866607609",
+                            "slackDisplayName": "Test2"
+                        }
+                    }
+                ],
+                "platformDetails": {
+                    "channelName": "Unknown Channel",
+                    "workspaceName": "PlawLabs",
+                    "channelType": "channel"
+                },
+                "source": {
+                    "platform": "SLACK",
+                    "identifier": "C09360VQC2U",
+                    "metadata": {
+                        "botUserId": "U094DJNLDE2",
+                        "channelType": "channel"
+                    }
+                },
+                "analysis": {
+                    "keyTopics": [],
+                    "actionItems": [],
+                    "hasActionItems": false,
+                    "hasFollowUp": false,
+                    "needsAttention": false
+                },
+                "summaryMetadata": {
+                    "hasKeyPoints": false,
+                    "hasNextSteps": false,
+                    "participantCount": 1,
+                    "highValueParticipants": 0,
+                    "lastSummarizedAt": "2025-07-21T01:14:47.200Z",
+                    "summaryVersion": 1
+                }
+            },
+            {
+                "id": "cmdc31l29000lsijfmrtj9ayc",
+                "title": "#agent",
+                "summary": "I've processed your request from the #agent channel. Here's the summary of your meeting with Yaz: The purpose was to test the workflow for handling actionable messages and meet transcripts. The summary has been stored and an action item created.",
+                "type": "CHANNEL",
+                "platform": "SLACK",
+                "startedAt": "2025-07-20T19:41:25.866Z",
+                "lastActivityAt": "2025-07-20T19:41:30.408Z",
+                "duration": 0,
+                "isRecent": true,
+                "messageCount": 1,
+                "recentMessages": [
+                    {
+                        "id": "cmdc31lga000nsijfpomomxz5",
+                        "text": "<@U094T8SDC8Z> consider this text a actionable message and a meet transcript from my todays meet with yaz\n\nthe participants of the meet were me and yaz.",
+                        "sentAt": "2025-07-20T19:41:17.612Z",
+                        "sender": {
+                            "name": "Test2",
+                            "email": "ani8866607609@gmail.com",
+                            "avatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                            "platformData": {
+                                "slackEmail": "ani8866607609@gmail.com",
+                                "slackAvatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                                "slackUserId": "U095XAPGR6D",
+                                "slackUsername": "ani8866607609",
+                                "slackDisplayName": "Test2"
+                            }
+                        }
+                    }
+                ],
+                "participants": [
+                    {
+                        "name": "Test2",
+                        "email": "ani8866607609@gmail.com",
+                        "avatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                        "platformData": {
+                            "slackEmail": "ani8866607609@gmail.com",
+                            "slackAvatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                            "slackUserId": "U095XAPGR6D",
+                            "slackUsername": "ani8866607609",
+                            "slackDisplayName": "Test2"
+                        }
+                    }
+                ],
+                "platformDetails": {
+                    "channelName": "Unknown Channel",
+                    "workspaceName": "PlawLabs",
+                    "channelType": "channel"
+                },
+                "source": {
+                    "platform": "SLACK",
+                    "identifier": "C09360VQC2U",
+                    "metadata": {
+                        "botUserId": "U094DJNLDE2",
+                        "channelType": "channel"
+                    }
+                },
+                "analysis": {
+                    "keyTopics": [],
+                    "actionItems": [],
+                    "hasActionItems": false,
+                    "hasFollowUp": false,
+                    "needsAttention": false
+                },
+                "summaryMetadata": {
+                    "hasKeyPoints": false,
+                    "hasNextSteps": false,
+                    "participantCount": 1,
+                    "highValueParticipants": 0,
+                    "lastSummarizedAt": "2025-07-21T01:11:56.766Z",
+                    "summaryVersion": 1
+                }
+            },
+            {
+                "id": "cmdc2xr9k0008sijff5wiiqbb",
+                "title": "#all-plawlabs",
+                "summary": "I have processed your request from your meeting with Yaz. Here is the summary: The meeting was intended to test the workflow for actionable messages and meet transcripts. The participants were you (Test2) and Yaz. The summary has been published.",
+                "type": "CHANNEL",
+                "platform": "SLACK",
+                "startedAt": "2025-07-20T19:38:28.807Z",
+                "lastActivityAt": "2025-07-20T19:38:31.736Z",
+                "duration": 0,
+                "isRecent": true,
+                "messageCount": 1,
+                "recentMessages": [
+                    {
+                        "id": "cmdc2xrn6000asijf5tc9e6z3",
+                        "text": "<@U094T8SDC8Z> consider this text a actionable message and a meet transcript from my todays meet with yaz\n\nthe participants of the meet were me and yaz.",
+                        "sentAt": "2025-07-20T19:38:20.957Z",
+                        "sender": {
+                            "name": "Test2",
+                            "email": "ani8866607609@gmail.com",
+                            "avatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                            "platformData": {
+                                "slackEmail": "ani8866607609@gmail.com",
+                                "slackAvatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                                "slackUserId": "U095XAPGR6D",
+                                "slackUsername": "ani8866607609",
+                                "slackDisplayName": "Test2"
+                            }
+                        }
+                    }
+                ],
+                "participants": [
+                    {
+                        "name": "Test2",
+                        "email": "ani8866607609@gmail.com",
+                        "avatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                        "platformData": {
+                            "slackEmail": "ani8866607609@gmail.com",
+                            "slackAvatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                            "slackUserId": "U095XAPGR6D",
+                            "slackUsername": "ani8866607609",
+                            "slackDisplayName": "Test2"
+                        }
+                    }
+                ],
+                "platformDetails": {
+                    "channelName": "Unknown Channel",
+                    "workspaceName": "PlawLabs",
+                    "channelType": "channel"
+                },
+                "source": {
+                    "platform": "SLACK",
+                    "identifier": "C0923AW50MV",
+                    "metadata": {
+                        "botUserId": "U094DJNLDE2",
+                        "channelType": "channel"
+                    }
+                },
+                "analysis": {
+                    "keyTopics": [],
+                    "actionItems": [],
+                    "hasActionItems": false,
+                    "hasFollowUp": false,
+                    "needsAttention": false
+                },
+                "summaryMetadata": {
+                    "hasKeyPoints": false,
+                    "hasNextSteps": false,
+                    "participantCount": 1,
+                    "highValueParticipants": 0,
+                    "lastSummarizedAt": "2025-07-21T01:08:56.932Z",
+                    "summaryVersion": 1
+                }
+            },
+            {
+                "id": "cmdc2owyy0001sijfbzssxe7o",
+                "title": "#all-plawlabs",
+                "summary": "I have processed your request to test the workflow. I've identified the message as an actionable meeting transcript. A summary of the meeting between you and Yaz has been created and stored. The purpose of the meeting was to test this workflow.",
+                "type": "CHANNEL",
+                "platform": "SLACK",
+                "startedAt": "2025-07-20T19:31:36.297Z",
+                "lastActivityAt": "2025-07-20T19:31:39.280Z",
+                "duration": 0,
+                "isRecent": true,
+                "messageCount": 1,
+                "recentMessages": [
+                    {
+                        "id": "cmdc2oxct0003sijfafsbdugr",
+                        "text": "<@U094T8SDC8Z> consider this a actionable message and a meet transcript and help me test the workflow\n\nthe participants of the meet were me and yaz.",
+                        "sentAt": "2025-07-20T19:31:28.273Z",
+                        "sender": {
+                            "name": "Test2",
+                            "email": "ani8866607609@gmail.com",
+                            "avatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                            "platformData": {
+                                "slackEmail": "ani8866607609@gmail.com",
+                                "slackAvatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                                "slackUserId": "U095XAPGR6D",
+                                "slackUsername": "ani8866607609",
+                                "slackDisplayName": "Test2"
+                            }
+                        }
+                    }
+                ],
+                "participants": [
+                    {
+                        "name": "Test2",
+                        "email": "ani8866607609@gmail.com",
+                        "avatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                        "platformData": {
+                            "slackEmail": "ani8866607609@gmail.com",
+                            "slackAvatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                            "slackUserId": "U095XAPGR6D",
+                            "slackUsername": "ani8866607609",
+                            "slackDisplayName": "Test2"
+                        }
+                    }
+                ],
+                "platformDetails": {
+                    "channelName": "Unknown Channel",
+                    "workspaceName": "PlawLabs",
+                    "channelType": "channel"
+                },
+                "source": {
+                    "platform": "SLACK",
+                    "identifier": "C0923AW50MV",
+                    "metadata": {
+                        "botUserId": "U094DJNLDE2",
+                        "channelType": "channel"
+                    }
+                },
+                "analysis": {
+                    "keyTopics": [],
+                    "actionItems": [],
+                    "hasActionItems": false,
+                    "hasFollowUp": false,
+                    "needsAttention": false
+                },
+                "summaryMetadata": {
+                    "hasKeyPoints": false,
+                    "hasNextSteps": false,
+                    "participantCount": 1,
+                    "highValueParticipants": 0,
+                    "lastSummarizedAt": "2025-07-21T01:01:59.785Z",
+                    "summaryVersion": 1
+                }
+            },
+            {
+                "id": "cmdc2c433000fsijf8zc2zpwv",
+                "title": "#all-plawlabs",
+                "summary": "I've processed your request. Here's a summary of the meeting between you (Test2) and Yaz: The purpose was to test the workflow by treating the message as both an actionable item and a meeting transcript. The summary has been created and stored.",
+                "type": "CHANNEL",
+                "platform": "SLACK",
+                "startedAt": "2025-07-20T19:21:38.991Z",
+                "lastActivityAt": "2025-07-20T19:21:40.802Z",
+                "duration": 0,
+                "isRecent": true,
+                "messageCount": 1,
+                "recentMessages": [
+                    {
+                        "id": "cmdc2c4ac000hsijf9145e409",
+                        "text": "<@U094T8SDC8Z> consider this a actionable message and a meet transcript and help me test the workflow\n\nthe participants of the meet were me and yaz.",
+                        "sentAt": "2025-07-20T19:21:32.684Z",
+                        "sender": {
+                            "name": "Test2",
+                            "email": "ani8866607609@gmail.com",
+                            "avatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                            "platformData": {
+                                "slackEmail": "ani8866607609@gmail.com",
+                                "slackAvatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                                "slackUserId": "U095XAPGR6D",
+                                "slackUsername": "ani8866607609",
+                                "slackDisplayName": "Test2"
+                            }
+                        }
+                    }
+                ],
+                "participants": [
+                    {
+                        "name": "Test2",
+                        "email": "ani8866607609@gmail.com",
+                        "avatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                        "platformData": {
+                            "slackEmail": "ani8866607609@gmail.com",
+                            "slackAvatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                            "slackUserId": "U095XAPGR6D",
+                            "slackUsername": "ani8866607609",
+                            "slackDisplayName": "Test2"
+                        }
+                    }
+                ],
+                "platformDetails": {
+                    "channelName": "Unknown Channel",
+                    "workspaceName": "PlawLabs",
+                    "channelType": "channel"
+                },
+                "source": {
+                    "platform": "SLACK",
+                    "identifier": "C0923AW50MV",
+                    "metadata": {
+                        "botUserId": "U094DJNLDE2",
+                        "channelType": "channel"
+                    }
+                },
+                "analysis": {
+                    "keyTopics": [],
+                    "actionItems": [],
+                    "hasActionItems": false,
+                    "hasFollowUp": false,
+                    "needsAttention": false
+                },
+                "summaryMetadata": {
+                    "hasKeyPoints": false,
+                    "hasNextSteps": false,
+                    "participantCount": 1,
+                    "highValueParticipants": 0,
+                    "lastSummarizedAt": "2025-07-21T00:52:08.136Z",
+                    "summaryVersion": 1
+                }
+            },
+            {
+                "id": "cmdc29mxy0008sijf23z812gt",
+                "title": "#all-plawlabs",
+                "summary": "Request acknowledged. I am running the test again as requested. Here is the summary of the follow-up 'meeting': The purpose was to repeat the previous test of the workflow for processing actionable messages and meeting transcripts, as requested by user Test2.",
+                "type": "CHANNEL",
+                "platform": "SLACK",
+                "startedAt": "2025-07-20T19:19:43.461Z",
+                "lastActivityAt": "2025-07-20T19:19:46.564Z",
+                "duration": 0,
+                "isRecent": true,
+                "messageCount": 1,
+                "recentMessages": [
+                    {
+                        "id": "cmdc29ncc000asijf7fn8kyfm",
+                        "text": "<@U094T8SDC8Z> try the above thing again",
+                        "sentAt": "2025-07-20T19:19:36.745Z",
+                        "sender": {
+                            "name": "Test2",
+                            "email": "ani8866607609@gmail.com",
+                            "avatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                            "platformData": {
+                                "slackEmail": "ani8866607609@gmail.com",
+                                "slackAvatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                                "slackUserId": "U095XAPGR6D",
+                                "slackUsername": "ani8866607609",
+                                "slackDisplayName": "Test2"
+                            }
+                        }
+                    }
+                ],
+                "participants": [
+                    {
+                        "name": "Test2",
+                        "email": "ani8866607609@gmail.com",
+                        "avatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                        "platformData": {
+                            "slackEmail": "ani8866607609@gmail.com",
+                            "slackAvatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                            "slackUserId": "U095XAPGR6D",
+                            "slackUsername": "ani8866607609",
+                            "slackDisplayName": "Test2"
+                        }
+                    }
+                ],
+                "platformDetails": {
+                    "channelName": "Unknown Channel",
+                    "workspaceName": "PlawLabs",
+                    "channelType": "channel"
+                },
+                "source": {
+                    "platform": "SLACK",
+                    "identifier": "C0923AW50MV",
+                    "metadata": {
+                        "botUserId": "U094DJNLDE2",
+                        "channelType": "channel"
+                    }
+                },
+                "analysis": {
+                    "keyTopics": [],
+                    "actionItems": [],
+                    "hasActionItems": false,
+                    "hasFollowUp": false,
+                    "needsAttention": false
+                },
+                "summaryMetadata": {
+                    "hasKeyPoints": false,
+                    "hasNextSteps": false,
+                    "participantCount": 1,
+                    "highValueParticipants": 0,
+                    "lastSummarizedAt": "2025-07-21T00:50:08.055Z",
+                    "summaryVersion": 1
+                }
+            },
+            {
+                "id": "cmdc24awd0001sijfu61bbng4",
+                "title": "#all-plawlabs",
+                "summary": "I've processed your request to test the workflow. I've identified the message as both an actionable item and a meeting transcript. Here's a summary of the meeting with participants Test2 and Yaz: the purpose was to test the workflow for processing actionable messages and meeting transcripts. I have also created an action item to track this test.",
+                "type": "CHANNEL",
+                "platform": "SLACK",
+                "startedAt": "2025-07-20T19:15:34.572Z",
+                "lastActivityAt": "2025-07-20T19:15:37.610Z",
+                "duration": 0,
+                "isRecent": true,
+                "messageCount": 1,
+                "recentMessages": [
+                    {
+                        "id": "cmdc24bak0003sijfkswxldzm",
+                        "text": "<@U094T8SDC8Z> consider this a actionable message and a meet transcript and help me test the workflow\n\nthe participants of the meet were me and yaz.",
+                        "sentAt": "2025-07-20T19:15:25.797Z",
+                        "sender": {
+                            "name": "Test2",
+                            "email": "ani8866607609@gmail.com",
+                            "avatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                            "platformData": {
+                                "slackEmail": "ani8866607609@gmail.com",
+                                "slackAvatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                                "slackUserId": "U095XAPGR6D",
+                                "slackUsername": "ani8866607609",
+                                "slackDisplayName": "Test2"
+                            }
+                        }
+                    }
+                ],
+                "participants": [
+                    {
+                        "name": "Test2",
+                        "email": "ani8866607609@gmail.com",
+                        "avatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                        "platformData": {
+                            "slackEmail": "ani8866607609@gmail.com",
+                            "slackAvatar": "https://secure.gravatar.com/avatar/99ec215c587c896249a8d6e73c972bc3.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0003-512.png",
+                            "slackUserId": "U095XAPGR6D",
+                            "slackUsername": "ani8866607609",
+                            "slackDisplayName": "Test2"
+                        }
+                    }
+                ],
+                "platformDetails": {
+                    "channelName": "Unknown Channel",
+                    "workspaceName": "PlawLabs",
+                    "channelType": "channel"
+                },
+                "source": {
+                    "platform": "SLACK",
+                    "identifier": "C0923AW50MV",
+                    "metadata": {
+                        "botUserId": "U094DJNLDE2",
+                        "channelType": "channel"
+                    }
+                },
+                "analysis": {
+                    "keyTopics": [],
+                    "actionItems": [],
+                    "hasActionItems": false,
+                    "hasFollowUp": false,
+                    "needsAttention": false
+                },
+                "summaryMetadata": {
+                    "hasKeyPoints": false,
+                    "hasNextSteps": false,
+                    "participantCount": 1,
+                    "highValueParticipants": 0,
+                    "lastSummarizedAt": "2025-07-21T00:46:06.704Z",
+                    "summaryVersion": 1
+                }
+            }
+        ]
+    }
+}

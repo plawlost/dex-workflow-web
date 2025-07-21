@@ -29,6 +29,8 @@ export default function AuthCallback() {
         }
 
         let tokens: {
+          email: string;
+          id: string;
           accessToken: string;
           refreshToken: string;
         } | null = null;
@@ -39,13 +41,23 @@ export default function AuthCallback() {
           try {
             const signUp = await backendAPI.signup(data.session.user.email || "", data.session.user.id, data.session.user.email || '')
             if (signUp.success) {
-              tokens = signUp.tokens;
+              tokens = {
+                email: signUp.user.email || "",
+                id: signUp.user.id || "",
+                accessToken: signUp.tokens.accessToken,
+                refreshToken: signUp.tokens.refreshToken,
+              };
             }
           } catch (error) {
             const login = await backendAPI.login(data.session.user.email || '', data.session.user.id || '')
             // Try signup if message is user not found
             if (login.success) {
-              tokens = login.tokens;
+              tokens = {
+                email: login.user.email || "",
+                id: login.user.id || "",
+                accessToken: login.tokens.accessToken,
+                refreshToken: login.tokens.refreshToken,
+              };
             }
           }
 
