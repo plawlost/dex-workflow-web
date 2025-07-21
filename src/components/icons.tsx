@@ -471,4 +471,22 @@ export function MessageIcon({ size = 20, className, ...props }: IconProps) {
       <rect x="5" y="8" width="10" height="2" rx="1" fill="currentColor" />
     </svg>
   );
+}
+
+export function RefreshIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <path d="M4 10C4 6.68629 6.68629 4 10 4C13.3137 4 16 6.68629 16 10C16 13.3137 13.3137 16 10 16C8.5 16 7.1 15.4 6 14.5" 
+            stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <rect x="2" y="12" width="4" height="2" rx="1" fill="currentColor" />
+      <rect x="4" y="10" width="2" height="4" rx="1" fill="currentColor" />
+    </svg>
+  );
 } 

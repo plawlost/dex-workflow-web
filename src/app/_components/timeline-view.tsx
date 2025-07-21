@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { cn } from "~/lib/utils";
 import { ContactModal } from "./contact-modal";
+import { SummariesKanban } from "./summaries-kanban";
 import { mockEvents, type Event } from "~/lib/mock-data";
 import { 
   CalendarIcon, PhoneIcon, MailIcon, MessageIcon, 
@@ -66,7 +67,10 @@ export function TimelineView() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Summaries Section */}
+      <SummariesKanban />
+      
       {/* Header Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">

@@ -133,6 +133,15 @@ class BackendAPI {
       body: JSON.stringify(workspaceId ? { workspaceId } : {}),
     });
   }
+
+  // Summaries endpoints
+  async getOverview(accessToken: string): Promise<{ summaries: string[] }> {
+    return this.request("/overview", {
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+      },
+    });
+  }
 }
 
 export const backendAPI = new BackendAPI();
